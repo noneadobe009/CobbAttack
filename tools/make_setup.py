@@ -397,10 +397,11 @@ in your profile — near-misses get corrected, garbage gets dropped.</p>
       icon</b> next to the profile name, then double-click the
       <b class="k">AI Communications</b> command (Keyword Collections).</li>
   <li>Click in the big "When I say" box: <b>Ctrl+A</b>, <b>Ctrl+C</b>, then Cancel out.</li>
-  <li>Paste into a file called <code>vaicom_keywords.txt</code> in the CobbAttack folder.</li>
-  <li>Run <code>python tools\\make_commands.py</code> — it writes <code>commands.txt</code>.</li>
-  <li>Restart CobbAttack. The log should say <code>… command phrases</code> with a big
-      number.</li>
+  <li>Paste into a file called <code>vaicom_keywords.txt</code> in the CobbAttack folder
+      (Notepad → Ctrl+V → save with that exact name).</li>
+  <li>Restart CobbAttack — it notices the new file and rebuilds its command list
+      automatically. The log says <code>commands.txt rebuilt</code> and
+      <code>… command phrases</code> with a big number.</li>
 </ol>
 <div class="shots">__TEACH_SHOTS__</div>
 <div class="warn">⚠️ <b>Copying OUT vs pasting IN — don't mix them up.</b> The steps
@@ -411,16 +412,16 @@ AI Communications, click in "When I say", <b>Ctrl+A</b>, <b>Ctrl+V</b> (replace 
 with new), and click <b>OK</b> (not Cancel!). If the paste comes out empty, FINISH's
 clipboard copy failed (it often does) — the same list is saved at
 <code>C:\\Program Files (x86)\\VoiceAttack\\Apps\\VAICOMPRO\\Export\\keywords.txt</code>;
-copy its contents from there. Afterwards, redo steps 1–5 so CobbAttack learns the
+copy its contents from there. Afterwards, redo steps 1–4 so CobbAttack learns the
 new list too.</div>
-<p style="color:var(--dim)">Bonus: run <code>python tools\\make_cheatsheet.py</code>
-after any refresh — it rebuilds the 📖 flight guide from the same file.</p>
+<p style="color:var(--dim)">The 📖 flight guide rebuilds itself from the same list
+on the next restart — nothing extra to run.</p>
 <p><b>If a word keeps coming out wrong:</b> click the wrong word in a blue
-<code>heard:</code> line and pick a fix. If one word came out as two, click the
-first wrong word then <b>Shift+click</b> the second — both go into the teach box
-as one phrase. Right-click the feed for <b>Undo fix</b> and <b>Clear window</b>.
-Hand-edit route: open <code>word_mappings.txt</code>, add a line like
-<code>miss heard thing -&gt; right thing</code>, save, restart.</p>
+<code>heard:</code> line and pick a fix. If one word came out as two, <b>drag
+across both wrong words</b> — they go into the teach box as one phrase. The feed
+confirms every Add. Right-click the feed for <b>Undo fix</b> and
+<b>Clear window</b>. Hand-edit route: open <code>word_mappings.txt</code>, add a
+line like <code>miss heard thing -&gt; right thing</code>, save, restart.</p>
 <p><b>Better accuracy (optional):</b> put <code>ggml-small.en.bin</code> from
 <a href="https://huggingface.co/ggerganov/whisper.cpp/tree/main">huggingface.co/ggerganov/whisper.cpp</a>
 into <code>models</code> and set <code>"model": "ggml-small.en.bin"</code> in

@@ -318,6 +318,21 @@ def main():
     settings = config.load()
     vaicom_patch.apply(settings)
     custom_vap.refresh()  # pick up any new profile export before the normalizer loads
+    # vaicom_keywords.txt newer than commands.txt (or commands.txt missing)?
+    # Rebuild automatically — no Python knowledge needed for the exe.
+    try:
+        kw = os.path.join(config.ROOT, "vaicom_keywords.txt")
+        cmds = config.COMMANDS_PATH
+        if os.path.exists(kw) and (not os.path.exists(cmds)
+                                   or os.path.getmtime(kw) > os.path.getmtime(cmds)):
+            import make_commands  # tools/ is on sys.path via custom_vap
+            make_commands.main()
+            log.info("commands.txt rebuilt from vaicom_keywords.txt")
+            import make_cheatsheet
+            make_cheatsheet.main()
+            log.info("flight guide rebuilt")
+    except Exception:
+        log.warning("commands.txt rebuild failed", exc_info=True)
     app = App(settings)
     if args.wav:
         app.run_wav(args.wav)

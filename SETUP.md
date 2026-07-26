@@ -163,8 +163,9 @@ VAICOM profile — near-misses get corrected, garbage gets dropped.
    then Cancel out (change nothing).
 3. Paste the clipboard into a file called `vaicom_keywords.txt` in the
    CobbAttack folder (Notepad → Ctrl+V → save with that exact name).
-4. Run `python tools\make_commands.py` — it writes `commands.txt`.
-5. Restart CobbAttack. Its log should say `... command phrases` with a big number.
+4. Restart CobbAttack — it notices the new file and rebuilds its command list
+   automatically (log: `commands.txt rebuilt` and `... command phrases` with a
+   big number). No Python needed.
 
 Copying OUT vs pasting IN — don't mix them up: the steps above only COPY the list
 out (that's why you Cancel — nothing changes). The one time you PASTE is after
@@ -187,7 +188,7 @@ switch? Two clicks and CobbAttack learns it:
 3. Restart CobbAttack — the log says `custom commands: N command(s) ...`.
 
 Your phrases now pass the firewall (otherwise they'd be discarded as mishears),
-and `python tools\make_cheatsheet.py` adds them to the flight guide under
+and the flight guide automatically lists them under
 "Your custom commands". Re-export after every new command — if a spoken command
 gets "no matching command" but works when clicked, you forgot to re-export.
 
@@ -195,9 +196,9 @@ gets "no matching command" but works when clicked, you forgot to re-export.
 
 Easiest: in the CobbAttack window, click the wrong word in a blue `heard:` line
 and pick a fix. If it turned one word into *two* (like "boat key" for "bogey"),
-click the first wrong word, then **Shift+click** the second — both land in the
-teach box as one phrase; type what it should be and press Add. Takes effect
-immediately. (Drag-select + right-click → **Teach fix** works too.)
+**drag across both wrong words** — they land in the teach box as one phrase;
+type what it should be and press Add. Takes effect immediately, and the feed
+confirms every Add (including "already taught").
 
 Right-click in the feed also gives you **Undo fix** (takes back the last thing
 you taught) and **Clear window**.
