@@ -77,10 +77,12 @@ just click the drop-box to pick the file. Your phrases are learned immediately.
 **Re-do this after adding new commands** — the symptom of forgetting is
 "no matching command" for a command that works when clicked.
 
-## 7. Start up — order matters
-1. VoiceAttack first
-2. then CobbAttack (`run-cobbattack.bat`; run `Add to Start Menu.bat` once if
-   you want a Start Menu entry)
+## 7. Start up — one rule: DCS last
+Start VoiceAttack and CobbAttack in either order (`run-cobbattack.bat`; run
+`Add to Start Menu.bat` once if you want a Start Menu entry). CobbAttack
+keeps its VAICOM repairs applied automatically, even if you restart
+VoiceAttack mid-session. Just make sure **DCS starts last**, after
+CobbAttack is up.
 
 ## 8. Check ONE line
 The first line in the CobbAttack window must say:

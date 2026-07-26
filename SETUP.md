@@ -230,8 +230,12 @@ into the `models` folder and set `"model": "ggml-small.en.bin"` in
   VAICOM bugs — including the famous one where **radios die after a mission
   restart (Shift+R) until you restart DCS**. That one is fixed for real (a
   Windows socket quirk VAICOM trips over; full story in
-  `VAICOM-mission-restart-bug.md`). Automatic; just start CobbAttack after
-  VoiceAttack and before DCS. You can restart missions freely.
-- **"DCS is not connected" that won't go away**: restart in order — VoiceAttack →
-  CobbAttack → then DCS **completely**. (With CobbAttack's patches this should
-  basically never happen anymore — if it does, tell us.)
+  `VAICOM-mission-restart-bug.md`). Automatic — CobbAttack re-applies the repair
+  within seconds whenever VoiceAttack starts (VoiceAttack erases it each time).
+  Only rule: **start DCS last**, after CobbAttack is up. You can restart missions
+  freely.
+- **"DCS is not connected" that won't go away**: with everything else still
+  running, restart DCS **completely** (not Shift+R). Universal reset if truly
+  stuck: close everything, start VoiceAttack and CobbAttack (either order), DCS
+  last. (With CobbAttack's patches this should basically never happen anymore —
+  if it does, tell us.)

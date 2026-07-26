@@ -317,6 +317,7 @@ def main():
     setup_logging()
     settings = config.load()
     vaicom_patch.apply(settings)
+    vaicom_patch.start_watch(settings)  # VA start wipes the fix — reapply on file change
     custom_vap.refresh()  # pick up any new profile export before the normalizer loads
     # vaicom_keywords.txt newer than commands.txt (or commands.txt missing)?
     # Rebuild automatically — no Python knowledge needed for the exe.

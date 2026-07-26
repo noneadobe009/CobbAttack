@@ -391,8 +391,10 @@ fails silently: the button will move the radio but never record.</div>
       The window shows what it heard, what it cleaned it up to, and how long it took.</li>
 </ol>
 <div class="shots">__RUN_SHOTS__</div>
-<div class="ok">✔ Order matters: start CobbAttack <b>after</b> VoiceAttack — on startup
-it also auto-repairs a VAICOM script bug (commands dying after the first mission).</div>
+<div class="ok">✔ One rule: start <b>DCS last</b>, after CobbAttack is up. CobbAttack
+auto-repairs a VAICOM script bug (radios dying after a mission restart) and keeps the
+repair applied even if you restart VoiceAttack mid-session — but DCS only picks it up
+when DCS starts.</div>
 </section>
 
 <section class="sec" id="teach" style="--acc:#e8c94b">

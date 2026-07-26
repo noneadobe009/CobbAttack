@@ -18,6 +18,8 @@ the file is already patched, VAICOM isn't installed, or DCS isn't found.
 import logging
 import os
 import re
+import threading
+import time
 
 log = logging.getLogger("cobb.vaicom")
 
@@ -299,3 +301,38 @@ def apply(settings):
     panel = _find_lua(settings, PANEL_REL)
     if panel is not None:
         _patch_file(panel, _transform_panel, "VAICOM radio-panel self-heal")
+
+
+def start_watch(settings, interval=5.0):
+    """Re-apply the fixes whenever VoiceAttack rewrites the lua files.
+
+    Starting VoiceAttack restores both files to stock, so start order used to
+    matter (VoiceAttack → CobbAttack → DCS). This watcher removes that trap:
+    one os.stat per file every few seconds *in our own process* — DCS does no
+    extra work (it only reads these files at DCS start), so zero FPS impact.
+    """
+    paths = [p for p in (_find_lua(settings, DEVICE_REL),
+                         _find_lua(settings, PANEL_REL)) if p]
+    if not paths:
+        return
+
+    def mtimes():
+        out = []
+        for p in paths:
+            try:
+                out.append(os.stat(p).st_mtime_ns)
+            except OSError:
+                out.append(None)
+        return out
+
+    def loop():
+        seen = mtimes()
+        while True:
+            time.sleep(interval)
+            now = mtimes()
+            if now != seen:
+                log.info("VAICOM lua files rewritten (VoiceAttack started?) — re-applying fix")
+                apply(settings)
+                seen = mtimes()
+
+    threading.Thread(target=loop, name="vaicom-patch-watch", daemon=True).start()
