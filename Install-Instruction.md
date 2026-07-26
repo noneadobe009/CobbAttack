@@ -1,9 +1,10 @@
 # CobbAttack — Install Instruction
 
-*Your own VoiceAttack commands, spoken — fast, local, GPU-powered. Ten steps,
-about ten minutes. Using VAICOM for DCS? Use the full
-[Illustrated Setup Manual](https://sextonjerome-cmyk.github.io/Cobb/Setup-Instruction.html)
-instead — this page is the quick path for plain VoiceAttack.*
+***Part 1 of 2 — installing.** This page gets every file into the right place,
+in about ten minutes. Then continue with **Part 2, the
+[Setup Instruction](https://sextonjerome-cmyk.github.io/Cobb/Setup-Instruction.html)** —
+the detailed first-start configuration with a screenshot for every click
+(VoiceAttack, VAICOM, talk buttons, first run).*
 
 ## 🗺️ Before you start — where everything goes
 
@@ -35,13 +36,14 @@ Open file location → use the `Apps` folder there.)
 
 ---
 
-## 🎉 Files installed — now the setup
+## 🎉 Files installed — Part 1 done
 
-Everything from here on is **setup**, not installation, and the
-[Setup Instruction](https://sextonjerome-cmyk.github.io/Cobb/Setup-Instruction.html)
-covers it in full detail with a screenshot for every click. **Open it now and
-follow along there** — the steps below are only the short version for people who
-already know VoiceAttack well.
+Everything from here on is **setup**, not installation. For your first start,
+continue in **Part 2, the
+[Setup Instruction](https://sextonjerome-cmyk.github.io/Cobb/Setup-Instruction.html)** —
+it walks the same ground in full detail with a screenshot for every click. The
+steps below are only the short version for people who already know VoiceAttack
+well.
 
 ---
 
@@ -94,6 +96,16 @@ Hold the talk button, say one of your commands, release. The window shows
 ## 10. Firewall popup
 Windows Firewall may ask once → **Allow**. Everything stays on your PC
 (127.0.0.1); nothing goes online.
+
+---
+
+## 🎯 Next: Part 2 — the Setup Instruction
+
+First start ahead: open the
+[Setup Instruction](https://sextonjerome-cmyk.github.io/Cobb/Setup-Instruction.html)
+and walk it top to bottom — exact VoiceAttack settings, VAICOM, talk buttons,
+first run, and teaching CobbAttack your commands, each with a screenshot to
+match your screen against.
 
 ---
 

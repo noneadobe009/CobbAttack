@@ -219,6 +219,13 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8">
   <a class="chip" href="#trouble">🚑 Troubleshooting</a>
 </nav>
 
+<div class="ok">📖 <b>Coming from the
+<a href="https://sextonjerome-cmyk.github.io/Cobb/Install-Instruction.html">Install
+Instruction</a>?</b> Perfect — your files are already in place, so skip step 1
+and start at <a href="#va"><b>step 2, VoiceAttack settings</b></a>. New here
+without installing yet? Do the
+<a href="https://sextonjerome-cmyk.github.io/Cobb/Install-Instruction.html">Install
+Instruction</a> first — it shows where everything goes.</div>
 <p style="color:var(--dim);font-size:.88rem">Every screenshot below is from the
 verified working setup — <b>click any picture to zoom</b>. If your screen matches
 the pictures, you're done with that step.</p>
