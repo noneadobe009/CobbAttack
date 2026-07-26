@@ -2,6 +2,11 @@
 
 **Fast local voice recognition for VoiceAttack / VAICOM / DCS — built for AMD GPUs.**
 
+> ### 🚀 New here? Start with these two links:
+> **[📖 Install Instructions](https://sextonjerome-cmyk.github.io/CobbAttack/Install%20Instruction.html)** — the friendly 10-step web page (plain VoiceAttack, no VAICOM)
+> **[🛠️ Illustrated VAICOM Setup Manual](https://sextonjerome-cmyk.github.io/CobbAttack/SETUP.html)** — screenshot-per-click guide for the full VAICOM path
+> **[⬇️ Download the latest release](https://github.com/sextonjerome-cmyk/CobbAttack/releases/latest)** — everything bundled, no Python needed
+
 CobbAttack replaces Windows Speech Recognition (and WhisperAttack's CUDA-only
 engine) with [whisper.cpp](https://github.com/ggml-org/whisper.cpp) running on
 **Vulkan** — so it's GPU-fast on AMD, NVIDIA, and Intel alike, with automatic
