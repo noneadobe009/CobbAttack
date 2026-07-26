@@ -1,4 +1,4 @@
-"""Build "Setup Instruction.html" — the pretty, shippable version of SETUP.md.
+"""Build Setup-Instruction.html — the pretty, shippable version of SETUP.md.
 
 Same dark cockpit look as the flight guide (commands-cheatsheet.html): hero corn,
 accent-colored step sections, checkbox panels, and real screenshots (embedded from

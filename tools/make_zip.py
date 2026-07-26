@@ -12,7 +12,7 @@ What goes in (and the judgment calls, per .claude/rules/quality.md):
   personal voice fixes stay home.
 What stays out: logs, settings.json (machine-specific mic/model pins),
 custom_commands.txt + *.vap (owner's profile), screenshots/ (already embedded
-in SETUP.html), backups, caches.
+in Setup-Instruction.html), backups, caches.
 """
 
 import os
