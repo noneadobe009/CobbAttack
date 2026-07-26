@@ -481,6 +481,25 @@ CobbAttack would discard them as mishears), and the flight guide's
 <div class="warn">⚠️ Re-export after every new command — CobbAttack can only read
 the <code>.vap</code> file, not VoiceAttack's memory. Forgot? Symptom: your new
 command works when typed but the spoken version gets "no matching command."</div>
+<h3 style="margin:14px 0 6px">🎬 Good videos on building commands</h3>
+<p>New to making VoiceAttack commands? These two show it click by click — a
+command is just a "When I say" phrase plus the key presses it fires:</p>
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=MUrbRdFT-pc">The Complete Guide to
+      VoiceAttack for DCS World — tips &amp; tricks</a>: building a command
+      library for DCS (great for the F-14 / Jester). The install part at the
+      start doesn't apply here — the tips are the good stuff.</li>
+  <li><a href="https://www.youtube.com/watch?v=MYfk5NLcP1M&amp;t=418s">VoiceAttack
+      for DCS — making a command (jumps to 6:58)</a>: a clean walk-through of the
+      Edit-a-Command window: phrase, key press, category, done.</li>
+</ul>
+<div class="warn">⚠️ Watching those videos with CobbAttack, two rules:
+<b>skip anything about VoiceAttack's microphone or recognition settings</b> —
+CobbAttack does the listening, and re-enabling VoiceAttack's own speech
+recognition makes every command fire twice. And your ordinary commands need
+<b>no plugin actions</b> — the Start/Stop Whisper Recording actions belong on
+the talk-button commands only. Build the command, then re-drop your profile
+export above.</div>
 </section>
 
 <section class="sec" id="trouble" style="--acc:#e06c5b">
