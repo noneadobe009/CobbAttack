@@ -484,16 +484,33 @@ command works when typed but the spoken version gets "no matching command."</div
 <h3 style="margin:14px 0 6px">🎬 Good videos on building commands</h3>
 <p>New to making VoiceAttack commands? These two show it click by click — a
 command is just a "When I say" phrase plus the key presses it fires:</p>
-<ul>
-  <li><a href="https://www.youtube.com/watch?v=MUrbRdFT-pc&amp;t=338s">The Complete
-      Guide to VoiceAttack for DCS World — tips &amp; tricks (jumps to Tip 1 at
-      5:38)</a>: building a command library for DCS (great for the F-14 /
-      Jester). The install part before that doesn't apply here — the tips are
-      the good stuff.</li>
-  <li><a href="https://www.youtube.com/watch?v=MYfk5NLcP1M&amp;t=239s">VoiceAttack
-      for DCS — making a command (jumps to 3:59)</a>: a clean walk-through of the
-      Edit-a-Command window: phrase, key press, category, done.</li>
-</ul>
+<div style="margin:10px 0 4px 22px">
+  <div style="display:flex;gap:12px;align-items:flex-start;background:var(--field);
+       border:1px solid #2a333e;border-radius:12px;padding:12px 16px;margin:10px 0">
+    <span style="flex:0 0 auto;background:#e62117;color:#fff;border-radius:8px;
+         padding:3px 10px;font-size:.8rem;font-weight:700;letter-spacing:.02em">▶&nbsp;YouTube</span>
+    <div>
+      <a href="https://www.youtube.com/watch?v=MUrbRdFT-pc&amp;t=338s"><b>The Complete
+      Guide to VoiceAttack for DCS World — tips &amp; tricks</b></a>
+      <span style="color:var(--dim)">· starts at Tip 1 (5:38)</span><br>
+      <span style="color:var(--dim);font-size:.9rem">Building a command library for
+      DCS — great for the F-14 / Jester. The install part before that doesn't apply
+      here; the tips are the good stuff.</span>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;align-items:flex-start;background:var(--field);
+       border:1px solid #2a333e;border-radius:12px;padding:12px 16px;margin:10px 0">
+    <span style="flex:0 0 auto;background:#e62117;color:#fff;border-radius:8px;
+         padding:3px 10px;font-size:.8rem;font-weight:700;letter-spacing:.02em">▶&nbsp;YouTube</span>
+    <div>
+      <a href="https://www.youtube.com/watch?v=MYfk5NLcP1M&amp;t=239s"><b>VoiceAttack
+      for DCS — making a command</b></a>
+      <span style="color:var(--dim)">· starts at 3:59</span><br>
+      <span style="color:var(--dim);font-size:.9rem">A clean walk-through of the
+      Edit-a-Command window: phrase, key press, category, done.</span>
+    </div>
+  </div>
+</div>
 <div class="warn">⚠️ Watching those videos with CobbAttack, two rules:
 <b>skip anything about VoiceAttack's microphone or recognition settings</b> —
 CobbAttack does the listening, and re-enabling VoiceAttack's own speech
