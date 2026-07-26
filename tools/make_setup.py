@@ -490,8 +490,8 @@ command is just a "When I say" phrase plus the key presses it fires:</p>
       5:38)</a>: building a command library for DCS (great for the F-14 /
       Jester). The install part before that doesn't apply here — the tips are
       the good stuff.</li>
-  <li><a href="https://www.youtube.com/watch?v=MYfk5NLcP1M&amp;t=418s">VoiceAttack
-      for DCS — making a command (jumps to 6:58)</a>: a clean walk-through of the
+  <li><a href="https://www.youtube.com/watch?v=MYfk5NLcP1M&amp;t=239s">VoiceAttack
+      for DCS — making a command (jumps to 3:59)</a>: a clean walk-through of the
       Edit-a-Command window: phrase, key press, category, done.</li>
 </ul>
 <div class="warn">⚠️ Watching those videos with CobbAttack, two rules:
