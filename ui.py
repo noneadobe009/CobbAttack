@@ -146,16 +146,31 @@ class CobbWindow:
         header.pack(fill="x", padx=16, pady=(4, 8))
         here = config.ROOT
         hero_png = os.path.join(here, "cob-hero-48.png")
-        hero_big = os.path.join(here, "cob-hero-58.png")
+        hero_big = os.path.join(here, "cob-hero-72.png")
         if os.path.exists(hero_png):
             self._hero_img = tk.PhotoImage(file=hero_png)  # keep refs — tk drops them otherwise
             self._hero_img_big = (tk.PhotoImage(file=hero_big)
                                   if os.path.exists(hero_big) else self._hero_img)
-            # fixed 58px box so the grow-on-hover doesn't shove the title around
-            hero_lbl = tk.Label(header, image=self._hero_img, bg=BG, width=58, height=58)
-            hero_lbl.pack(side="left", padx=(0, 8))
-            hero_lbl.bind("<Enter>", lambda e: hero_lbl.configure(image=self._hero_img_big))
-            hero_lbl.bind("<Leave>", lambda e: hero_lbl.configure(image=self._hero_img))
+            # 12px left pad: puts the icon's center where the pop-over's center will
+            # be, so the popped jet's left edge lines up with the joke text below
+            hero_lbl = tk.Label(header, image=self._hero_img, bg=BG)
+            hero_lbl.pack(side="left", padx=(12, 8))
+            # hover pop-over: floats via place() so the header keeps its tight 48px
+            # height — the big jet is allowed to hang down over the joke line
+            big_lbl = tk.Label(self.root, image=self._hero_img_big, bg=BG, bd=0)
+
+            def _hero_pop(_e):
+                # centered on the small icon so it grows out from the middle
+                x = (hero_lbl.winfo_rootx() - self.root.winfo_rootx()
+                     + (hero_lbl.winfo_width() - self._hero_img_big.width()) // 2)
+                y = (hero_lbl.winfo_rooty() - self.root.winfo_rooty()
+                     + (hero_lbl.winfo_height() - self._hero_img_big.height()) // 2)
+                big_lbl.place(x=max(x, 0), y=max(y, 0))
+                big_lbl.lift()
+
+            hero_lbl.bind("<Enter>", _hero_pop)
+            # the pop-over covers the small icon, so the pointer "leaves" via big_lbl
+            big_lbl.bind("<Leave>", lambda e: big_lbl.place_forget())
         else:  # Cobb-proof fallback: the drawn mini-hero
             hero = tk.Canvas(header, width=48, height=30, bg=BG, highlightthickness=0)
             hero.pack(side="left", padx=(0, 8))

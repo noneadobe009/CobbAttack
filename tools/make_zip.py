@@ -27,7 +27,7 @@ TOP_FILES = [
     "normalize.py", "jokes.py", "vaicom_patch.py", "custom_vap.py",
     "requirements.txt", "run-cobbattack.bat", "Add to Start Menu.bat",
     "cobbattack.ico",
-    "cob-hero.png", "cob-hero-48.png", "cob-hero-58.png", "cob-hero-200.png",
+    "cob-hero.png", "cob-hero-48.png", "cob-hero-72.png", "cob-hero-200.png",
     "cob-hero-icon.png",
     "README.md", "Install-Instruction.md", "Install-Instruction.html",
     "SETUP.md", "Setup-Instruction.html", "commands-cheatsheet.html",
