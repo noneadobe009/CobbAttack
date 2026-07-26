@@ -1,4 +1,4 @@
-"""Build SETUP.html — the pretty, shippable version of SETUP.md.
+"""Build "Setup Instruction.html" — the pretty, shippable version of SETUP.md.
 
 Same dark cockpit look as the flight guide (commands-cheatsheet.html): hero corn,
 accent-colored step sections, checkbox panels, and real screenshots (embedded from
@@ -11,7 +11,7 @@ import base64
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DST = os.path.join(ROOT, "SETUP.html")
+DST = os.path.join(ROOT, "Setup Instruction.html")
 SHOTS = os.path.join(ROOT, "screenshots")
 
 
@@ -104,7 +104,7 @@ RUN_SHOTS = "".join([
 
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CobbAttack — Setup Guide</title>
+<title>CobbAttack — Setup Instruction</title>
 <style>
  :root { --bg:#14181d; --panel:#1c2229; --field:#242c35; --text:#d7dde3;
          --dim:#7a8794; --green:#5dd08c; --amber:#e8b33e; --blue:#5aa7e0;

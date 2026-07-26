@@ -176,7 +176,7 @@ class CobbWindow:
 
         toolbar = tk.Frame(self.root, bg=BG)
         toolbar.pack(fill="x", padx=16, pady=(10, 0))
-        self.setup_btn = RoundButton(toolbar, "🛠️  SETUP MANUAL", fg=AMBER,
+        self.setup_btn = RoundButton(toolbar, "🛠️  SETUP INSTRUCTION", fg=AMBER,
                                      border="#6b5a2a", command=self._open_setup)
         self.setup_btn.pack(side="left")
         self.trainer_btn = RoundButton(toolbar, "🎯  VOICE TRAINER", fg=GREEN,
@@ -704,7 +704,7 @@ class CobbWindow:
             self.post("error", message="no cheat sheet yet — run tools\\make_cheatsheet.py")
 
     def _open_setup(self):
-        path = os.path.join(config.ROOT, "SETUP.html")
+        path = os.path.join(config.ROOT, "Setup Instruction.html")
         if os.path.exists(path):
             webbrowser.open(path)
         else:

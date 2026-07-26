@@ -2,7 +2,7 @@
 
 *Your own VoiceAttack commands, spoken — fast, local, GPU-powered. Ten steps,
 about ten minutes. Using VAICOM for DCS? Use the full
-[Illustrated Setup Manual](https://sextonjerome-cmyk.github.io/Cobb/SETUP.html)
+[Illustrated Setup Manual](https://sextonjerome-cmyk.github.io/Cobb/Setup%20Instruction.html)
 instead — this page is the quick path for plain VoiceAttack.*
 
 ## 🗺️ Before you start — where everything goes
@@ -31,18 +31,30 @@ Copy the folder `third_party\WhisperAttackServerCommand` into:
 
 (Installed VoiceAttack somewhere else? Right-click your VoiceAttack shortcut →
 Open file location → use the `Apps` folder there.)
-📸 Screenshots: [Illustrated Manual → Install](https://sextonjerome-cmyk.github.io/Cobb/SETUP.html#install)
+📸 Screenshots: [Illustrated Manual → Install](https://sextonjerome-cmyk.github.io/Cobb/Setup%20Instruction.html#install)
+
+---
+
+## 🎉 Files installed — now the setup
+
+Everything from here on is **setup**, not installation, and the
+[Setup Instruction](https://sextonjerome-cmyk.github.io/Cobb/Setup%20Instruction.html)
+covers it in full detail with a screenshot for every click. **Open it now and
+follow along there** — the steps below are only the short version for people who
+already know VoiceAttack well.
+
+---
 
 ## 3. Turn ON plugin support
 VoiceAttack → wrench icon (Options) → tick **Enable Plugin Support** → restart
 VoiceAttack when it asks.
-📸 Screenshots: [Illustrated Manual → VoiceAttack settings](https://sextonjerome-cmyk.github.io/Cobb/SETUP.html#va)
+📸 Screenshots: [Illustrated Manual → VoiceAttack settings](https://sextonjerome-cmyk.github.io/Cobb/Setup%20Instruction.html#va)
 
 ## 4. Turn OFF VoiceAttack's own speech recognition
 Same Options screen. Important — otherwise Windows speech recognition and
 CobbAttack both hear you and commands fire twice. Your commands still work;
 CobbAttack becomes the ears.
-📸 Screenshots: [Illustrated Manual → VoiceAttack settings](https://sextonjerome-cmyk.github.io/Cobb/SETUP.html#va)
+📸 Screenshots: [Illustrated Manual → VoiceAttack settings](https://sextonjerome-cmyk.github.io/Cobb/Setup%20Instruction.html#va)
 
 ## 5. Wire your talk button
 In your profile, add two commands:
@@ -53,7 +65,7 @@ In your profile, add two commands:
 | talk button **release** | same plugin → context: `Stop Whisper Recording` |
 
 Type the context text **exactly** — a typo fails silently with no error anywhere.
-📸 Click-by-click: [Illustrated Manual → Buttons](https://sextonjerome-cmyk.github.io/Cobb/SETUP.html#buttons)
+📸 Click-by-click: [Illustrated Manual → Buttons](https://sextonjerome-cmyk.github.io/Cobb/Setup%20Instruction.html#buttons)
 
 ## 6. Add your profile (so your commands are recognized)
 In VoiceAttack: profile pencil icon → **Export Profile** → save the `.vap` file
@@ -93,5 +105,5 @@ Windows Firewall may ask once → **Allow**. Everything stays on your PC
 - Taught something dumb? Right-click the feed → **Undo fix**.
 - Right-click the feed → **Clear window**.
 - 🎯 **VOICE TRAINER**: scored practice, nothing sent to VoiceAttack.
-- Stuck? [Illustrated Manual → Troubleshooting](https://sextonjerome-cmyk.github.io/Cobb/SETUP.html#trouble),
+- Stuck? [Illustrated Manual → Troubleshooting](https://sextonjerome-cmyk.github.io/Cobb/Setup%20Instruction.html#trouble),
   and everything is logged in `cobbattack.log` — send us that file.

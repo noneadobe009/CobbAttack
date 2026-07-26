@@ -30,7 +30,7 @@ TOP_FILES = [
     "cob-hero.png", "cob-hero-48.png", "cob-hero-58.png", "cob-hero-200.png",
     "cob-hero-icon.png",
     "README.md", "Install Instruction.md", "Install Instruction.html",
-    "SETUP.md", "SETUP.html", "commands-cheatsheet.html",
+    "SETUP.md", "Setup Instruction.html", "commands-cheatsheet.html",
     "VAICOM-mission-restart-bug.md",
     "fuzzy_terms.txt", "commands.txt", "recipients.txt", "vaicom_keywords.txt",
 ]
