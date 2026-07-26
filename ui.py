@@ -704,7 +704,7 @@ class CobbWindow:
             self.post("error", message="no cheat sheet yet — run tools\\make_cheatsheet.py")
 
     def _open_setup(self):
-        path = os.path.join(config.ROOT, "Setup Instruction.html")
+        path = os.path.join(config.ROOT, "Setup-Instruction.html")
         if os.path.exists(path):
             webbrowser.open(path)
         else:

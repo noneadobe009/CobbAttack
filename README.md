@@ -3,8 +3,8 @@
 **Fast local voice recognition for VoiceAttack / VAICOM / DCS — built for AMD GPUs.**
 
 > ### 🚀 New here? Start with these two links:
-> **[📖 Install Instructions](https://sextonjerome-cmyk.github.io/Cobb/Install%20Instruction.html)** — the friendly 10-step web page (plain VoiceAttack, no VAICOM)
-> **[🛠️ Illustrated VAICOM Setup Manual](https://sextonjerome-cmyk.github.io/Cobb/Setup%20Instruction.html)** — screenshot-per-click guide for the full VAICOM path
+> **[📖 Install Instructions](https://sextonjerome-cmyk.github.io/Cobb/Install-Instruction.html)** — the friendly 10-step web page (plain VoiceAttack, no VAICOM)
+> **[🛠️ Illustrated VAICOM Setup Manual](https://sextonjerome-cmyk.github.io/Cobb/Setup-Instruction.html)** — screenshot-per-click guide for the full VAICOM path
 > **[⬇️ Download the latest release](https://github.com/sextonjerome-cmyk/Cobb/releases/latest)** — everything bundled, no Python needed
 
 CobbAttack replaces Windows Speech Recognition (and WhisperAttack's CUDA-only
@@ -69,7 +69,7 @@ same protocol, same plugin.
 - 🎯 **Voice Trainer**: profile-verified practice phrases, ✓ auto-advance,
   ✗ one-click TEACH FIX, session score. Nothing is sent to VoiceAttack while
   training. (Rumor has it there's a bonus round.)
-- 🛠️ **SETUP MANUAL** button → Setup Instruction.html; 📖 flight guide → command
+- 🛠️ **SETUP MANUAL** button → Setup-Instruction.html; 📖 flight guide → command
   cheatsheet. A rotating fighter-pilot joke on every launch.
 
 ### VAICOM auto-repair (vaicom_patch.py)
@@ -86,8 +86,8 @@ launch; harmless if VAICOM isn't installed):
   mission end (its own 60 s reconnect timer has a null-crash bug).
 
 ### Guides & tools
-- **SETUP.md / Setup Instruction.html** — illustrated, screenshot-per-click setup for the
-  full VAICOM path. **Install Instruction.html/.md** — the 10-step path for
+- **SETUP.md / Setup-Instruction.html** — illustrated, screenshot-per-click setup for the
+  full VAICOM path. **Install-Instruction.html/.md** — the 10-step path for
   plain VoiceAttack (no VAICOM); opens automatically on first launch.
 - `tools/make_cheatsheet.py` — flight-phase command cheatsheet
   (`commands-cheatsheet.html`) with hover tooltips and your custom commands.
@@ -101,10 +101,10 @@ launch; harmless if VAICOM isn't installed):
 
 ## Quick start
 
-- **Plain VoiceAttack (Cobb's path):** [Install Instruction.md](Install%20Instruction.md) —
+- **Plain VoiceAttack (Cobb's path):** [Install-Instruction.md](Install-Instruction.md) —
   10 steps, ~10 minutes (also opens as a page on first launch).
 - **VAICOM PRO/CE users:** [SETUP.md](SETUP.md) or the illustrated
-  [Setup Instruction.html](Setup%20Instruction.html).
+  [Setup-Instruction.html](Setup-Instruction.html).
 - **Developers:** `pip install -r requirements.txt`, `python main.py`
   (`--nogui` for console, `--wav file.wav` for a one-shot test). Test without
   VoiceAttack: `python tools/fake_va.py` in one terminal,

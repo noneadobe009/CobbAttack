@@ -11,7 +11,7 @@ import base64
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DST = os.path.join(ROOT, "Setup Instruction.html")
+DST = os.path.join(ROOT, "Setup-Instruction.html")
 SHOTS = os.path.join(ROOT, "screenshots")
 
 

@@ -1,6 +1,6 @@
 # CobbAttack — Setup Guide
 
-> **Prefer pictures?** Open `Setup Instruction.html` — the same guide with screenshots of every
+> **Prefer pictures?** Open `Setup-Instruction.html` — the same guide with screenshots of every
 > settings page (the raw images live in `screenshots\`). Rebuild it with
 > `python tools\make_setup.py` after editing this file.
 

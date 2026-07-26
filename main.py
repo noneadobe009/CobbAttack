@@ -257,7 +257,7 @@ class App:
         # First launch on a new machine: open the install walkthrough once.
         marker = os.path.join(config.ROOT, ".install-guide-shown")
         if not os.path.exists(marker):
-            guide = os.path.join(config.ROOT, "Install Instruction.html")
+            guide = os.path.join(config.ROOT, "Install-Instruction.html")
             if os.path.exists(guide):
                 import webbrowser
                 webbrowser.open(guide)
