@@ -1,0 +1,214 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CobbAttack — pick your hero</title>
+<style>
+ :root { --bg:#14181d; --panel:#1c2229; --text:#d7dde3; --dim:#7a8794; --green:#5dd08c; }
+ * { box-sizing:border-box; }
+ body { font-family:'Segoe UI',sans-serif; background:var(--bg); color:var(--text);
+        max-width:1100px; margin:0 auto; padding:0 1rem 4rem; }
+ h1 { text-align:center; letter-spacing:.1em; margin:2rem 0 .2rem; }
+ p.sub { text-align:center; color:var(--dim); margin:0 0 1.6rem; }
+ .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:1rem; }
+ .card { background:var(--panel); border:1px solid #2a333e; border-radius:14px;
+         padding: .8rem; text-align:center; }
+ .card svg { width:100%; height:auto; border-radius:10px; }
+ .card h3 { margin:.5rem 0 .1rem; font-size:1rem; }
+ .card h3 b { color:var(--green); margin-right:.4rem; }
+ .card p { color:var(--dim); font-size:.82rem; margin:.1rem 0 .2rem; }
+</style></head><body>
+<h1>🌽 PICK YOUR COB</h1>
+<p class="sub">Twenty flying corn-cob superheroes. Tell me the number — winner becomes the CobbAttack mascot.</p>
+<div class="grid" id="grid"></div>
+
+<script>
+// One parametric cob hero, twenty flavors.
+function hero(o) {
+  const tilt = o.tilt ?? -30;
+  const cape = o.cape ?? "#d84b3a";
+  const capeDark = o.capeDark ?? shade(cape, -25);
+  let bg = o.bg ?? "#1a2028";
+  let bgExtra = "";
+  if (o.stars) {
+    bg = "#101725";
+    for (let i = 0; i < 14; i++) {
+      const x = 10 + (i * 137) % 180, y = 8 + (i * 61) % 185, r = (i % 3) * .5 + .7;
+      bgExtra += `<circle cx="${x}" cy="${y}" r="${r}" fill="#cfe0ff" opacity=".8"/>`;
+    }
+  }
+  if (o.sunset) bg = "url(#sunset)";
+  if (o.burst) {
+    let pts = "";
+    for (let i = 0; i < 24; i++) {
+      const a1 = i * Math.PI / 12, a2 = a1 + Math.PI / 24;
+      const r1 = i % 2 ? 260 : 90;
+      pts += `<polygon points="100,100 ${100 + Math.cos(a1) * r1},${100 + Math.sin(a1) * r1} ${100 + Math.cos(a2) * r1},${100 + Math.sin(a2) * r1}" fill="${i % 2 ? '#232c38' : '#2b3646'}"/>`;
+    }
+    bgExtra += pts;
+  }
+
+  // --- pieces in upright local space, rotated as a group ---
+  const px = o.pixel;
+  let kernels = "";
+  for (let y = 52; y <= 148; y += 13) {
+    const half = 30 * Math.sqrt(Math.max(0, 1 - ((y - 97) / 56) ** 2));
+    for (let x = 100 - half + 5; x <= 100 + half - 5; x += 12) {
+      kernels += px
+        ? `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" fill="#eab033" stroke="#d99a25" stroke-width="1"/>`
+        : `<circle cx="${x}" cy="${y}" r="4.6" fill="#eab033" stroke="#d99a25" stroke-width=".8"/>`;
+    }
+  }
+  const body = `
+    <ellipse cx="100" cy="97" rx="33" ry="57" fill="#f2c14e" stroke="#c8901f" stroke-width="3"/>
+    ${kernels}
+    <ellipse cx="100" cy="86" rx="24" ry="27" fill="#f7cf6b"/>`;
+
+  // husk "boots"
+  const husk = `
+    <path d="M 74 130 Q 60 168 70 186 Q 84 168 88 142 Z" fill="#3d8b3d"/>
+    <path d="M 126 130 Q 140 168 130 186 Q 116 168 112 142 Z" fill="#3d8b3d"/>
+    <path d="M 86 138 Q 84 176 100 190 Q 116 176 114 138 Q 100 150 86 138 Z" fill="#4f9e4f"/>
+    <path d="M 96 142 Q 100 170 100 186" stroke="#3d8b3d" stroke-width="2" fill="none"/>`;
+
+  // cape behind (flows down-left in local space = trailing when tilted)
+  const capeSvg = o.bigCape ? `
+    <path d="M 78 62 Q 20 90 12 170 Q 40 150 48 172 Q 66 140 60 188 Q 92 150 100 132 L 122 62 Z"
+          fill="${cape}"/>
+    <path d="M 78 62 Q 40 100 34 160 Q 62 132 74 150 Q 84 120 100 132 L 116 64 Z" fill="${capeDark}"/>`
+    : `
+    <path d="M 80 60 Q 34 96 30 168 Q 58 140 66 162 Q 84 130 100 130 L 120 60 Z" fill="${cape}"/>
+    <path d="M 80 60 Q 48 100 44 150 Q 68 126 78 142 Q 88 118 100 128 L 114 62 Z" fill="${capeDark}"/>`;
+
+  // arms: lead fist punched up-forward, rear arm back
+  const glove = o.glove ?? "#2e7d32";
+  const arms = o.thumbsUp ? `
+    <path d="M 128 92 Q 148 84 152 66" stroke="#f2c14e" stroke-width="11" stroke-linecap="round" fill="none"/>
+    <circle cx="153" cy="62" r="10" fill="${glove}"/>
+    <rect x="149" y="42" width="8" height="16" rx="4" fill="${glove}"/>
+    <path d="M 72 96 Q 56 106 52 122" stroke="#f2c14e" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <circle cx="52" cy="124" r="8" fill="${glove}"/>` : `
+    <path d="M 126 70 Q 150 52 166 44" stroke="#f2c14e" stroke-width="11" stroke-linecap="round" fill="none"/>
+    <circle cx="170" cy="42" r="10.5" fill="${glove}"/>
+    <path d="M 74 96 Q 58 110 56 126" stroke="#f2c14e" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <circle cx="56" cy="128" r="8" fill="${glove}"/>`;
+
+  // faces
+  let glasses = "";
+  const gy = 80;
+  if (o.glasses === "aviator") glasses = `
+    <path d="M 80 ${gy} q 9 -6 18 0 q 1 14 -9 15 q -10 -1 -9 -15 Z" fill="#20242c" stroke="#d4af37" stroke-width="2.4"/>
+    <path d="M 102 ${gy} q 9 -6 18 0 q 1 14 -9 15 q -10 -1 -9 -15 Z" fill="#20242c" stroke="#d4af37" stroke-width="2.4"/>
+    <path d="M 98 ${gy} q 2 -3 4 0" stroke="#d4af37" stroke-width="2.4" fill="none"/>
+    <path d="M 80 ${gy} L 72 78 M 120 ${gy} L 128 78" stroke="#d4af37" stroke-width="2.4"/>
+    <path d="M 84 ${gy + 3} l 4 -2" stroke="#8fa3b8" stroke-width="1.6"/>`;
+  else if (o.glasses === "visor") glasses = `
+    <rect x="76" y="${gy - 4}" width="48" height="15" rx="7.5" fill="url(#visor)" stroke="#20242c" stroke-width="2.5"/>`;
+  else if (o.glasses === "mirror") glasses = `
+    <rect x="78" y="${gy - 3}" width="19" height="14" rx="4" fill="url(#mir)"/>
+    <rect x="103" y="${gy - 3}" width="19" height="14" rx="4" fill="url(#mir)"/>
+    <rect x="96" y="${gy + 1}" width="8" height="3.5" fill="#20242c"/>
+    <path d="M 78 ${gy} L 72 78 M 122 ${gy} L 128 78" stroke="#20242c" stroke-width="2.5"/>` ;
+  else glasses = `
+    <rect x="78" y="${gy - 3}" width="19" height="14" rx="4" fill="#181c22"/>
+    <rect x="103" y="${gy - 3}" width="19" height="14" rx="4" fill="#181c22"/>
+    <rect x="96" y="${gy + 1}" width="8" height="3.5" fill="#181c22"/>
+    <path d="M 78 ${gy} L 72 78 M 122 ${gy} L 128 78" stroke="#181c22" stroke-width="2.5"/>
+    <path d="M 81 ${gy} l 5 -2" stroke="#5a6b7d" stroke-width="1.8"/>`;
+
+  const brow = o.brow ? `<path d="M 102 ${gy - 8} q 10 -5 20 -1" stroke="#8a5a1d" stroke-width="3.5" fill="none" stroke-linecap="round"/>` : "";
+  const mouth = o.grin
+    ? `<path d="M 86 100 Q 100 114 114 100 L 113 104 Q 100 113 87 104 Z" fill="#20242c"/>
+       <rect x="92" y="101" width="16" height="4.5" rx="2" fill="#fff"/>`
+    : `<path d="M 88 102 Q 101 111 114 100" stroke="#8a5a1d" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
+  const mustache = o.mustache
+    ? `<path d="M 100 96 q -8 -4 -15 2 q 6 5 15 1 q 9 4 15 -1 q -7 -6 -15 -2 Z" fill="#6b4423"/>` : "";
+  const emblem = o.emblem
+    ? `<circle cx="100" cy="124" r="11" fill="#d84b3a" stroke="#a83326" stroke-width="2"/>
+       <text x="100" y="129" font-family="Arial Black,Arial" font-size="14" font-weight="900" fill="#ffd97a" text-anchor="middle">C</text>` : "";
+  const butter = o.butter
+    ? `<g transform="rotate(-8 100 40)"><rect x="84" y="32" width="32" height="13" rx="2.5" fill="#ffe27a" stroke="#e0b93f" stroke-width="2"/>
+       <path d="M 88 45 q 2 8 -1 9 q -4 -2 -3 -9 Z" fill="#ffe27a"/></g>` : "";
+  const helmet = o.helmet
+    ? `<path d="M 68 66 Q 70 30 100 28 Q 130 30 132 66 L 124 62 Q 122 40 100 38 Q 78 40 76 62 Z" fill="#5b4a32"/>
+       <circle cx="100" cy="32" r="4" fill="#8fa3b8"/>` : "";
+  const collar = o.suit
+    ? `<path d="M 74 132 L 100 156 L 90 132 Z" fill="#181c22"/>
+       <path d="M 126 132 L 100 156 L 110 132 Z" fill="#181c22"/>
+       <circle cx="100" cy="140" r="4" fill="#d84b3a"/>` : "";
+
+  // trails (drawn in world space, before the rotated group)
+  let trail = "";
+  if (o.speed) trail = `
+    <line x1="6" y1="120" x2="52" y2="112" stroke="#54637a" stroke-width="4" stroke-linecap="round"/>
+    <line x1="0" y1="140" x2="42" y2="134" stroke="#435062" stroke-width="4" stroke-linecap="round"/>
+    <line x1="12" y1="160" x2="50" y2="152" stroke="#435062" stroke-width="4" stroke-linecap="round"/>`;
+  if (o.flames) trail = `
+    <path d="M 8 158 Q 34 138 58 146 Q 44 152 40 162 Q 28 172 8 158 Z" fill="#ff8c2e"/>
+    <path d="M 20 156 Q 38 146 54 148 Q 44 154 40 160 Q 30 164 20 156 Z" fill="#ffd23e"/>`;
+  if (o.contrail) trail = `
+    <path d="M -4 150 Q 40 128 62 140 L 58 152 Q 34 144 -4 162 Z" fill="#e8eef5" opacity=".85"/>`;
+  if (o.popcorn) {
+    const puff = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})">
+      <circle cx="0" cy="0" r="7" fill="#fffbe8"/><circle cx="-6" cy="3" r="5" fill="#fff3cf"/>
+      <circle cx="6" cy="3" r="5" fill="#fff3cf"/><circle cx="0" cy="-6" r="5" fill="#fff"/></g>`;
+    trail = puff(20, 150, 1) + puff(44, 132, .8) + puff(12, 174, .7) + puff(52, 166, .6);
+  }
+  if (o.kernelTrail) trail = [
+    [16, 148], [36, 132], [28, 168], [52, 150], [44, 176]
+  ].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="#eab033" stroke="#c8901f" stroke-width="1.5"/>`).join("");
+
+  return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sunset" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#2b2140"/><stop offset=".55" stop-color="#b3452e"/>
+        <stop offset="1" stop-color="#e8912e"/>
+      </linearGradient>
+      <linearGradient id="visor" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#7fe3ff"/><stop offset="1" stop-color="#1b6f8f"/>
+      </linearGradient>
+      <linearGradient id="mir" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#bfe9ff"/><stop offset=".5" stop-color="#5aa7e0"/>
+        <stop offset="1" stop-color="#26506e"/>
+      </linearGradient>
+    </defs>
+    <rect width="200" height="200" fill="${bg}"/>${bgExtra}${trail}
+    <g transform="rotate(${tilt} 100 100)">
+      ${capeSvg}${body}${husk}${collar}${emblem}${arms}${helmet}${butter}
+      ${brow}${glasses}${mustache}${mouth}
+    </g>
+  </svg>`;
+}
+
+function shade(hex, pct) {
+  const n = parseInt(hex.slice(1), 16),
+    f = c => Math.max(0, Math.min(255, Math.round(c * (100 + pct) / 100)));
+  return "#" + [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(f).map(c => c.toString(16).padStart(2, "0")).join("");
+}
+
+const options = [
+  ["Classic", "The original. Cape, shades, fist out front.", { speed: true }],
+  ["Aviator", "Gold aviators — earned, not bought.", { glasses: "aviator", cape: "#2e5e9e", speed: true }],
+  ["Night Ops", "Zero illum, full send.", { glasses: "mirror", cape: "#23272f", stars: true }],
+  ["Full Burner", "Someone lit the husk.", { flames: true, cape: "#d84b3a", grin: true }],
+  ["Contrail", "Smooth pass, camera ready.", { contrail: true, cape: "#2e8e5e", glasses: "aviator" }],
+  ["Comic Burst", "POW! Straight off a cover.", { burst: true, grin: true, emblem: true }],
+  ["The Smirk", "Knows something you don't.", { brow: true, speed: true, cape: "#8e44ad" }],
+  ["Big Cape Energy", "The cape does the talking.", { bigCape: true, cape: "#d84b3a", speed: true }],
+  ["Chest Emblem", "C is for Cobb.", { emblem: true, cape: "#2e5e9e", speed: true, grin: true }],
+  ["Popcorn Punch", "Hits so hard he pops.", { popcorn: true, grin: true, cape: "#e8912e" }],
+  ["Buttered Up", "Beret? No. Butter.", { butter: true, brow: true, cape: "#d84b3a" }],
+  ["The Ace", "Helmet on, visor down.", { helmet: true, glasses: "visor", cape: "#4a5d23", speed: true }],
+  ["Kernel Trail", "Leaves a little of himself behind.", { kernelTrail: true, grin: true, cape: "#2e8e5e" }],
+  ["Golden Hour", "Sunset formation flyby.", { sunset: true, glasses: "aviator", cape: "#772f1a" }],
+  ["The Cobfather", "An offer you can't refuse.", { suit: true, tilt: 0, mustache: true, cape: "#23272f", thumbsUp: true }],
+  ["Mo' Cob", "The mustache flies itself.", { mustache: true, glasses: "aviator", cape: "#8a5a1d", speed: true }],
+  ["8-Bit", "Retro arcade cob.", { pixel: true, grin: true, cape: "#d84b3a", speed: true }],
+  ["Thumbs Up", "Preflight complete. Let's go.", { thumbsUp: true, tilt: 0, grin: true, cape: "#2e5e9e" }],
+  ["Visor Mode", "Cyber-cob online.", { glasses: "visor", cape: "#1f8f8f", kernelTrail: true }],
+  ["Steep Climb", "Unrestricted, and using it.", { tilt: -55, flames: true, glasses: "mirror", cape: "#d84b3a" }],
+];
+
+document.getElementById("grid").innerHTML = options.map(([name, blurb, o], i) =>
+  `<div class="card">${hero(o)}<h3><b>#${i + 1}</b>${name}</h3><p>${blurb}</p></div>`
+).join("");
+</script>
+</body></html>

@@ -1,0 +1,83 @@
+"""Aviation jokes for the window header — one per launch (Parlez's quotes.py pattern:
+a local list on purpose, no network). Military-leaning, squadron-safe."""
+
+import random
+
+JOKES = [
+    "The three most useless things in aviation: altitude above you, runway behind you, and fuel in the truck.",
+    "What's the difference between God and a fighter pilot? God doesn't think He's a fighter pilot.",
+    "Helicopters don't fly — they beat the air into submission.",
+    "A good landing is one you walk away from. A great landing means they can use the jet again.",
+    "The only time you can have too much fuel is when you're on fire.",
+    "Airspeed, altitude, brains: you need at least two at all times.",
+    "The propeller is just a fan to keep the pilot cool. Turn it off and watch him sweat.",
+    "Navy pilots don't land — they arrive. Twice, if the first wire doesn't catch.",
+    "Air Force runways are so long because their pilots need three chances to find the ground.",
+    "How do you know there's a fighter pilot in the room? He'll tell you.",
+    "Flying is hours of boredom punctuated by moments of stark terror — and debriefs about both.",
+    "Gravity is not your enemy. It always wins fair and square.",
+    "You know you landed gear-up when it takes full power to taxi.",
+    "ATC: 'Say altitude.' Pilot: 'ALTITUDE.' ATC: 'Say cancelling IFR.' Pilot: 'Altitude.'",
+    "A checklist exists because a pilot's memory is written in pencil.",
+    "Weather briefings are horoscopes with numbers.",
+    "Any pilot who claims he's never been lost has never been anywhere.",
+    "The Phantom proved that with enough thrust, even a brick can fly.",
+    "Bombers make policy. Fighters make history. Tankers make it all possible — just ask them.",
+    "There are old pilots and bold pilots, but no old, bold pilots.",
+    "If black boxes survive every crash, why don't they build the whole jet out of black boxes?",
+    "The nugget asked the LSO how to get a perfect pass. 'Simple,' he said. 'Fly a perfect jet perfectly.'",
+    "Fighter pilots don't make mistakes — they generate unplanned training opportunities.",
+    "Never fly the A model of anything.",
+    "In a twin, the second engine's job is to carry you to the scene of the crash.",
+    "The radio has two settings: too quiet during checkride, too loud during emergencies.",
+    "Trust your captain — but keep your seatbelt fastened.",
+    "'What do you get when you cross an Air Force pilot with an ATC controller?' A conversation neither understands.",
+    "The glide ratio of a helicopter is roughly that of a filing cabinet.",
+    "A Marine pilot's preflight: kick the tire, light the fire, brief on guard.",
+    "Why do 747s have humps? So the pilot can sit on his wallet.",
+    "Eject twice and the Martin-Baker company gives you a tie. Nobody wears it to parties twice.",
+    "Radar contact: the controller knows exactly where you were when you got lost.",
+    "The optimist invented the airplane. The pessimist invented the parachute. A realist packed two.",
+    "Nothing is more optimistic than a wingman saying 'I've got the lead… I think.'",
+    "Speed is life. Altitude is life insurance.",
+    "A fighter without a gun is like an airplane without a fighter pilot's opinion about it.",
+    "Every landing on a carrier is graded. Every landing in the Air Force is celebrated.",
+    "'Tower, request low pass.' — 'Negative, Ghost Rider, the pattern is full.'",
+    # Kirk specials — squadron humor. Kirk is a nugget fresh out of flight school;
+    # the best-of cut, with love.
+    "Kirk asked the LSO which wire he should aim for. The LSO said 'the boat, Kirk. Aim for the boat.'",
+    "Kirk called the ball so early the tower asked him to call it back.",
+    "Kirk's last pass was graded 'no grade — but great enthusiasm.'",
+    "Night trap? Kirk prefers the term 'surprise arrival.'",
+    "Kirk's kneeboard has one note on it: 'GEAR DOWN. SERIOUSLY.'",
+    "Tanker asked Kirk to say his position. Kirk said 'nervous.'",
+    "Kirk read the NATOPS cover to cover. The jet remains unconvinced.",
+    "Kirk asked why the runway numbers change at each end. We let him think about it.",
+    "Kirk greased one on yesterday. The sim counts, Kirk insists.",
+    # The funnier batch — classics, punched up.
+    "Tower: 'What are your intentions?' Student: 'To be a doctor, but my grades weren't good enough.'",
+    "Instructor: 'If the engine quits at night, turn on the landing light. If you don't like what you see... turn it off.'",
+    "Lost pilot: 'I'm over a lake.' ATC: 'Sir, that's Lake Michigan.'",
+    "ATC: 'Traffic at 2 o'clock.' Pilot: 'Roger, we'll look at 3 — running a bit late today.'",
+    "'Unable' — the most powerful word in aviation. Also in marriage.",
+    "Frankfurt ground: 'Have you never been here before?' Lufthansa: 'I have. In 1944. I didn't stop.'",
+    "Guard frequency is just aviation's group chat, and somebody ALWAYS has a hot mic.",
+    "Bought my wingman a beer. He said 'two.' He always says 'two.'",
+    "The difference between a jet engine and a fighter pilot? The engine stops whining at the chocks.",
+    "Ask a pilot about his 45-minute flight and clear your afternoon.",
+    "Tower: 'Say fuel remaining.' Pilot: 'Fuel remaining... and a deep sense of regret.'",
+    "My instructor said flying is the second greatest thrill known to man. Landing is the first.",
+    "Passenger: 'Those storm clouds look bad.' Pilot: 'They look worse from up close, trust me.'",
+    "The Hornet's computer has one job: telling you what you did wrong, in real time, forever.",
+    "ATC to student on first solo: 'You're cleared to land. Please do.'",
+    # After-dark hangar humor — the handful, as requested.
+    "Pilots: the only people who brag about how fast they went down.",
+    "Helicopter pilots make attentive lovers — years of practice keeping something up that wants to go down.",
+    "Tanker crew pickup line: 'You're cleared into pre-contact position.'",
+    "LSO's dating advice: a little power, keep your nose up, and never come in flat.",
+    "Why did the pilot get thrown out of the party? Kept yelling 'three greens, cleared to enter.'",
+]
+
+
+def pick() -> str:
+    return random.choice(JOKES)

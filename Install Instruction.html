@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CobbAttack — Install (plain VoiceAttack)</title>
+<style>
+:root { --bg:#10141a; --panel:#1a212b; --text:#d8dee6; --dim:#8a97a6;
+        --gold:#f2c14e; --green:#79dfa4; --blue:#6fb3e0; --red:#e07a6a;
+        --field:#141a22; --border:#2e3946; }
+body { background:var(--bg); color:var(--text); margin:0;
+       font:15px/1.55 "Segoe UI", system-ui, sans-serif; }
+.wrap { max-width:780px; margin:0 auto; padding:32px 20px 60px; }
+h1 { color:var(--gold); font-size:26px; margin:0 0 4px; }
+.sub { color:var(--dim); margin-bottom:26px; }
+.step { background:var(--panel); border:1px solid var(--border); border-radius:14px;
+        padding:16px 20px; margin:14px 0; }
+.step h2 { margin:0 0 8px; font-size:17px; color:var(--blue); }
+.step h2 .n { display:inline-block; background:var(--field); color:var(--gold);
+        border-radius:8px; padding:1px 9px; margin-right:8px; font-size:15px; }
+code, pre { background:var(--field); border-radius:6px; padding:2px 7px;
+        font:13px Consolas, monospace; color:var(--green); }
+pre { padding:10px 14px; overflow-x:auto; }
+.warn { color:var(--gold); } .bad { color:var(--red); }
+table { border-collapse:collapse; width:100%; margin:6px 0; }
+td { border:1px solid var(--border); padding:7px 10px; font-size:14px; }
+.daily { border-color:#3a6b4d; }
+.daily h2 { color:var(--green); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>🛩️ CobbAttack — Install</h1>
+<div class="sub">For plain VoiceAttack with your own commands (no VAICOM).
+Ten steps, about ten minutes. VAICOM users: use <b>SETUP.html</b> instead.</div>
+
+<div class="step"><h2><span class="n">1</span>Unzip</h2>
+Unzip <code>CobbAttack.zip</code> somewhere simple like <code>C:\CobbAttack</code>.
+<b>Not</b> inside Program Files.</div>
+
+<div class="step"><h2><span class="n">2</span>Install the plugin (one folder copy)</h2>
+Copy the folder <code>third_party\WhisperAttackServerCommand</code> into
+<pre>C:\Program Files (x86)\VoiceAttack\Apps\</pre>
+No downloads — the plugin is bundled.<br>
+<span style="font-size:.85rem;color:var(--dim)">Installed VoiceAttack somewhere
+else? Find its <code>Apps</code> folder there instead — in VoiceAttack: wrench
+icon → the install path is shown at the bottom (or right-click the VoiceAttack
+shortcut → Open file location).</span></div>
+
+<div class="step"><h2><span class="n">3</span>Turn ON plugin support</h2>
+VoiceAttack → wrench icon (Options) → tick <b>Enable Plugin Support</b> →
+restart VoiceAttack when it asks.</div>
+
+<div class="step"><h2><span class="n">4</span>Turn OFF VoiceAttack's own speech recognition</h2>
+Same Options screen. <span class="warn">Important</span> — otherwise Windows
+speech recognition and CobbAttack both hear you and commands fire twice.
+Your commands still work; CobbAttack becomes the ears.</div>
+
+<div class="step"><h2><span class="n">5</span>Wire your talk button</h2>
+In your profile, add two commands:
+<table>
+<tr><td>talk button <b>press</b></td>
+<td><i>Execute an external plugin function</i> → <b>WhisperAttack Server Command</b>
+→ context: <code>Start Whisper Recording</code></td></tr>
+<tr><td>talk button <b>release</b></td>
+<td>same plugin → context: <code>Stop Whisper Recording</code></td></tr>
+</table>
+Type the context text <b>exactly</b> — a typo fails silently with no error anywhere.</div>
+
+<div class="step"><h2><span class="n">6</span>Add your profile so your commands are recognized</h2>
+In VoiceAttack: profile pencil icon → <b>Export Profile</b> → save the
+<code>.vap</code> file anywhere. Then open the <b>📖 FLIGHT VOICE GUIDE</b>
+(button in the CobbAttack window) and drag the file onto the drop-box under
+"Your custom commands" — or just click the drop-box to pick the file. Your
+phrases are learned immediately.<br>
+<span class="warn">Re-do this after adding new commands</span> — the symptom of
+forgetting is "no matching command" for a command that works when clicked.</div>
+
+<div class="step"><h2><span class="n">7</span>Start up — order matters</h2>
+1. VoiceAttack first<br>
+2. then CobbAttack (<code>run-cobbattack.bat</code>; run
+<code>Add to Start Menu.bat</code> once for a Start Menu entry)</div>
+
+<div class="step"><h2><span class="n">8</span>Check ONE line</h2>
+The first line in the CobbAttack window must say
+<pre>Vulkan GPU — AMD Radeon ...</pre>
+If it says <span class="bad">CPU</span> — stop and tell us. Don't fly like that.</div>
+
+<div class="step"><h2><span class="n">9</span>Test without flying</h2>
+Hold the talk button, say one of your commands, release. The window shows
+<code>heard:</code> → <code>sent</code>, and VoiceAttack's log shows the command
+firing.</div>
+
+<div class="step"><h2><span class="n">10</span>Firewall popup</h2>
+Windows Firewall may ask once → <b>Allow</b>. Everything stays on your PC
+(127.0.0.1); nothing goes online.</div>
+
+<div class="step daily"><h2>✔ Daily use</h2>
+<b>Fix a mishear:</b> click the wrong word in a blue <code>heard:</code> line — or
+hold the <b>left</b> mouse button and sweep across several words, then
+<b>right-click</b> the highlighted text → <i>Teach fix</i>. Type what it should
+be, press Add. Works immediately, remembered forever.<br>
+<b>Undo a bad fix:</b> right-click the feed → <i>Undo fix</i>.<br>
+<b>Clear the window:</b> right-click → <i>Clear window</i>.<br>
+<b>Practice:</b> 🎯 VOICE TRAINER — scored practice, nothing sent to VoiceAttack.<br>
+<b>Stuck?</b> Everything is logged in <code>cobbattack.log</code> — send us that file.</div>
+
+</div></body>
+</html>

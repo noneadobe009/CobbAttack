@@ -1,0 +1,323 @@
+"""CobbAttack — AMD-friendly Whisper voice recognition for VAICOM/VoiceAttack.
+
+Default is the window (ui.py): status light, live feed, teach-a-word box.
+--nogui keeps the plain console for debugging; --wav <file> pushes one audio
+file through the whole pipeline and exits.
+"""
+
+import argparse
+import json
+import logging
+import os
+import sys
+import threading
+import time
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+import config
+import custom_vap
+import engine as engine_mod
+import normalize as normalize_mod
+import recorder as recorder_mod
+import bridge
+import vaicom_patch
+
+log = logging.getLogger("cobb")
+
+IMPORT_PORT = 65434  # the flight guide's profile drop-box posts .vap files here
+
+
+class _VapImportHandler(BaseHTTPRequestHandler):
+    """Receives a .vap dropped onto the flight guide page (localhost only)."""
+
+    app = None  # set to the running App before the server starts
+
+    def _cors(self):
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Filename")
+        self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self._cors()
+        self.end_headers()
+
+    def do_POST(self):
+        count = -1
+        if self.path == "/import-vap":
+            try:
+                size = int(self.headers.get("Content-Length", 0))
+                data = self.rfile.read(size)
+                name = os.path.basename(
+                    self.headers.get("X-Filename", "") or "profile.vap")
+                if not name.lower().endswith(".vap"):
+                    name += ".vap"
+                with open(os.path.join(config.ROOT, name), "wb") as f:
+                    f.write(data)
+                count = self.app.reimport_profiles()
+            except Exception:
+                log.exception("profile drop import failed")
+        body = json.dumps({"count": count}).encode()
+        self.send_response(200)
+        self._cors()
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def log_message(self, *args):  # keep HTTP chatter out of the app log
+        pass
+
+BANNER = r"""
+  CobbAttack — local Whisper for VAICOM / VoiceAttack (AMD-friendly)
+"""
+
+# Voice-trainer drill list: the everyday calls plus the phrases Whisper finds
+# phonetically slippery (jargon, clipped consonants). Filtered against the real
+# profile at startup, so the trainer never asks for a phrase that doesn't exist.
+PRACTICE_CANDIDATES = [
+    # ground & departure
+    "request startup", "request taxi to runway", "request takeoff",
+    "request rearming", "request refuel",
+    # wingman
+    "break right", "break left", "anchor here", "rejoin",
+    # awacs
+    "request picture", "bogey dope", "declare", "request vector to bandit",
+    # tanker
+    "ready precontact",
+    # arrival
+    "inbound", "request landing", "taxi to parking",
+    # harder — long or jargon-heavy, the ones worth drilling
+    "wilco", "commencing", "request straight in",
+    "inbound for carrier", "inbound mother request marshal",
+    "requesting unrestricted climb one eight zero",
+    "jester scan azimuth",
+]
+
+
+def setup_logging():
+    fmt = logging.Formatter("%(asctime)s %(levelname)-7s %(message)s", "%H:%M:%S")
+    root = logging.getLogger()
+    root.setLevel(logging.INFO)
+    if sys.stdout is not None:  # absent under pythonw — the log file still gets everything
+        console = logging.StreamHandler(sys.stdout)
+        console.setFormatter(fmt)
+        root.addHandler(console)
+    file_handler = logging.FileHandler(config.LOG_PATH, encoding="utf-8")
+    file_handler.setFormatter(fmt)
+    root.addHandler(file_handler)
+
+
+class App:
+    def __init__(self, settings):
+        self.settings = settings
+        self.engine = engine_mod.Engine(settings)
+        self.recorder = recorder_mod.Recorder(settings)
+        self.normalizer = normalize_mod.Normalizer(settings)
+        self.control = bridge.ControlServer(settings["control_port"], self.on_control)
+        self.window = None  # set by run_gui; every .post is a no-op without it
+        self._recording_since = None
+        self._shutdown = threading.Event()
+        self.practice_mode = threading.Event()  # trainer on: results go to the panel, not VoiceAttack
+
+    # ---- UI helper (safe with or without a window) ----
+    def post(self, kind, **data):
+        if self.window is not None:
+            self.window.post(kind, **data)
+
+    def start_services(self):
+        try:
+            self.engine.start()
+        except Exception as e:
+            log.error("engine failed to start: %s", e)
+            self.post("error", message=f"engine failed to start: {e}")
+            return
+        self.post("device", line=self.engine.device_line)
+        self.control.start()
+        try:
+            _VapImportHandler.app = self
+            self.import_server = ThreadingHTTPServer(
+                ("127.0.0.1", IMPORT_PORT), _VapImportHandler)
+            threading.Thread(target=self.import_server.serve_forever,
+                             daemon=True).start()
+        except OSError as e:
+            log.warning("profile drop-box server not started: %s", e)
+        self.post("state", state="ready")
+        log.info("ready — waiting for PTT (start/stop on port %d)", self.settings["control_port"])
+
+    def on_control(self, message):
+        if message == "start":
+            self._recording_since = time.monotonic()
+            self.recorder.start()
+            self.post("state", state="recording")
+            log.info("PTT down — recording")
+        elif message == "stop":
+            audio = self.recorder.stop()
+            held = time.monotonic() - (self._recording_since or time.monotonic())
+            log.info("PTT up — %.2f s of audio", held)
+            if held < self.settings["min_record_seconds"] or audio.size == 0:
+                log.info("too short — ignored")
+                self.post("state", state="ready")
+                return
+            self.post("state", state="thinking")
+            threading.Thread(target=self.process, args=(audio,), daemon=True).start()
+        elif message == "shutdown":
+            log.info("shutdown requested by plugin")
+            self._shutdown.set()
+            if self.window is not None:
+                self.window.post("state", state="starting")
+                self.window.root.after(0, self.window.root.destroy)
+        else:
+            log.warning("unknown control message: %r", message)
+
+    def process(self, audio):
+        t0 = time.monotonic()
+        wav = recorder_mod.Recorder.to_wav(audio)
+        try:
+            raw = self.engine.transcribe(wav)
+        except Exception as e:  # engine hiccup must not kill the app mid-flight
+            log.error("transcription failed: %s", e)
+            self.post("error", message=f"transcription failed: {e}")
+            self.post("state", state="ready")
+            return
+        t_stt = time.monotonic() - t0
+        log.info("heard: %r (%.0f ms)", raw, t_stt * 1000)
+        self.post("heard", raw=raw, ms=t_stt * 1000)
+
+        text = self.normalizer.normalize(raw)
+        if self.practice_mode.is_set():
+            self.post("practice", raw=raw, text=text)
+            self.post("state", state="ready")
+            return
+        if text is None:
+            self.post("dropped", reason="dropped — silence/noise, nothing sent")
+            self.post("state", state="ready")
+            return
+        if text.startswith("note "):
+            bridge.send_to_kneeboard(text[5:])
+            log.info("kneeboard note sent")
+            self.post("dropped", reason="kneeboard note sent")
+            self.post("state", state="ready")
+            return
+        if bridge.send_to_voiceattack(
+            text, self.settings["voiceattack_host"], self.settings["voiceattack_port"]
+        ):
+            total = (time.monotonic() - t0) * 1000
+            log.info("sent to VoiceAttack: %r (total %.0f ms)", text, total)
+            self.post("sent", text=text, total_ms=total)
+        else:
+            self.post("error", message="VoiceAttack not reachable — is it running with the WASC plugin?")
+        self.post("state", state="ready")
+
+    def teach(self, wrong, right):
+        if self.normalizer.add_mapping(wrong, right):
+            self.post("learned", wrong=wrong.strip().lower(), right=right.strip().lower())
+            return True
+        return False
+
+    def reimport_profiles(self):
+        """Re-parse .vap exports, reload command lists, rebuild the flight guide."""
+        custom_vap.refresh()
+        self.normalizer.reload_commands()
+        try:
+            import make_cheatsheet  # tools/ is on sys.path via custom_vap
+            make_cheatsheet.main()
+        except Exception:
+            log.warning("flight guide rebuild failed", exc_info=True)
+        count = len(self.normalizer.custom)
+        self.post("profile", count=count)
+        return count
+
+    # ---- run modes ----
+    def practice_phrases(self):
+        cmds = set(self.normalizer.commands)
+        if not cmds:  # no commands.txt yet — drill the full candidate list
+            return list(PRACTICE_CANDIDATES)
+        return [p for p in PRACTICE_CANDIDATES if p in cmds]
+
+    def set_practice(self, on: bool):
+        if on:
+            self.practice_mode.set()
+            log.info("voice trainer ON — results stay in the app")
+        else:
+            self.practice_mode.clear()
+            log.info("voice trainer OFF — back to normal operation")
+
+    def run_gui(self):
+        from ui import CobbWindow
+
+        # First launch on a new machine: open the install walkthrough once.
+        marker = os.path.join(config.ROOT, ".install-guide-shown")
+        if not os.path.exists(marker):
+            guide = os.path.join(config.ROOT, "Install Instruction.html")
+            if os.path.exists(guide):
+                import webbrowser
+                webbrowser.open(guide)
+            try:
+                open(marker, "w").close()
+            except OSError:
+                pass
+
+        self.window = CobbWindow(on_teach=self.teach, on_close=self.stop,
+                                 on_unteach=self.normalizer.remove_mapping,
+                                 on_suggest=self.normalizer.suggest,
+                                 on_practice=self.set_practice,
+                                 practice_phrases=self.practice_phrases())
+        threading.Thread(target=self.start_services, daemon=True).start()
+        self.window.run()  # blocks until the window closes
+
+    def run_console(self):
+        print(BANNER)
+        self.start_services()
+        print(f"\n  >>> DEVICE: {self.engine.device_line} <<<\n")
+        try:
+            self._shutdown.wait()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            self.stop()
+
+    def run_wav(self, path):
+        """One-shot pipeline test without a microphone."""
+        self.engine.start()
+        print(f"\n  >>> DEVICE: {self.engine.device_line} <<<\n")
+        with open(path, "rb") as f:
+            wav = f.read()
+        t0 = time.monotonic()
+        raw = self.engine.transcribe(wav)
+        log.info("heard: %r (%.0f ms)", raw, (time.monotonic() - t0) * 1000)
+        text = self.normalizer.normalize(raw)
+        log.info("normalized: %r", text)
+        if text is not None:
+            bridge.send_to_voiceattack(
+                text, self.settings["voiceattack_host"], self.settings["voiceattack_port"]
+            )
+        self.stop()
+
+    def stop(self):
+        self.control.close()
+        self.engine.stop()
+        log.info("stopped")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="CobbAttack voice server")
+    parser.add_argument("--wav", help="transcribe one WAV file through the pipeline and exit")
+    parser.add_argument("--nogui", action="store_true", help="plain console instead of the window")
+    args = parser.parse_args()
+
+    setup_logging()
+    settings = config.load()
+    vaicom_patch.apply(settings)
+    custom_vap.refresh()  # pick up any new profile export before the normalizer loads
+    app = App(settings)
+    if args.wav:
+        app.run_wav(args.wav)
+    elif args.nogui:
+        app.run_console()
+    else:
+        app.run_gui()
+
+
+if __name__ == "__main__":
+    main()

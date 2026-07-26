@@ -1,0 +1,14 @@
+# Exact phrase fixes applied first, longest first. Format: wrong -> right
+# This is the CLEAN SEED shipped to new installs (generic Whisper quirks only —
+# no personal voice fixes). The zip script copies this in as word_mappings.txt.
+and field -> enfield
+in field -> enfield
+ann field -> enfield
+spring field -> springfield
+dark star -> darkstar
+over lord -> overlord
+take off -> takeoff
+start up -> startup
+re fuel -> refuel
+re arm -> rearm
+request lunch -> request launch

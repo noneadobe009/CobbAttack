@@ -1,0 +1,8 @@
+# Deliberately small. No torch, no CUDA — whisper.cpp binaries in bin/ do inference.
+numpy==2.4.6
+sounddevice==0.5.5
+requests==2.32.5
+rapidfuzz==3.14.1
+# Kneeboard-note parity feature only; app runs without them.
+pyperclip==1.11.0
+keyboard==0.13.5

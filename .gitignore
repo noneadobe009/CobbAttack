@@ -1,0 +1,26 @@
+# --- personal / machine-specific (never publish) ---
+settings.json
+word_mappings.txt
+custom_commands.txt
+vaicom_keywords.txt
+commands.txt
+recipients.txt
+commands-cheatsheet.html
+*.vap
+cobbattack.log
+parley.log
+.install-guide-shown
+backup-before-reinstall/
+screenshots/
+
+# --- big binaries: shipped in the release zip, not the repo ---
+models/
+bin/
+dist/
+
+# --- build junk ---
+build/
+build_exe/
+build_meta/
+__pycache__/
+*.pyc
