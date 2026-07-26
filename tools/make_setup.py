@@ -485,10 +485,11 @@ command works when typed but the spoken version gets "no matching command."</div
 <p>New to making VoiceAttack commands? These two show it click by click — a
 command is just a "When I say" phrase plus the key presses it fires:</p>
 <ul>
-  <li><a href="https://www.youtube.com/watch?v=MUrbRdFT-pc">The Complete Guide to
-      VoiceAttack for DCS World — tips &amp; tricks</a>: building a command
-      library for DCS (great for the F-14 / Jester). The install part at the
-      start doesn't apply here — the tips are the good stuff.</li>
+  <li><a href="https://www.youtube.com/watch?v=MUrbRdFT-pc&amp;t=338s">The Complete
+      Guide to VoiceAttack for DCS World — tips &amp; tricks (jumps to Tip 1 at
+      5:38)</a>: building a command library for DCS (great for the F-14 /
+      Jester). The install part before that doesn't apply here — the tips are
+      the good stuff.</li>
   <li><a href="https://www.youtube.com/watch?v=MYfk5NLcP1M&amp;t=418s">VoiceAttack
       for DCS — making a command (jumps to 6:58)</a>: a clean walk-through of the
       Edit-a-Command window: phrase, key press, category, done.</li>
