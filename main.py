@@ -210,9 +210,17 @@ class App:
         self.post("state", state="ready")
 
     def teach(self, wrong, right):
+        w = " ".join(wrong.strip().lower().split())
+        r = " ".join(right.strip().lower().split())
         if self.normalizer.add_mapping(wrong, right):
-            self.post("learned", wrong=wrong.strip().lower(), right=right.strip().lower())
+            self.post("learned", wrong=w, right=r)
             return True
+        if (w, r) in self.normalizer.mappings:
+            # already taught — still a success from the user's point of view
+            self.post("learned_dup", wrong=w, right=r)
+            return True
+        self.post("error",
+                  message="couldn't teach that — both boxes need words, and they must differ")
         return False
 
     def reimport_profiles(self):

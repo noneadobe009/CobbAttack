@@ -382,8 +382,14 @@ class CobbWindow:
 
     def _ev_device(self, line):
         self.device_label.configure(text=line)
+        self._device_line = line
         on_gpu = "GPU" in line and "no GPU" not in line
         self._append([("engine: ", "dim"), (line + "\n", "green" if on_gpu else "amber")])
+
+    def _ev_learned_dup(self, wrong, right):
+        self._append([("learned ", "dim"),
+                      (f"“{wrong}” → “{right}” was already taught — it's active\n",
+                       "amber")])
 
     def _ev_profile(self, count):
         if count > 0:
@@ -566,6 +572,12 @@ class CobbWindow:
         self.feed.configure(state="normal")
         self.feed.delete("1.0", "end")
         self.feed.configure(state="disabled")
+        # fresh feed still shows what engine we're on, same as at startup
+        line = getattr(self, "_device_line", None)
+        if line:
+            on_gpu = "GPU" in line and "no GPU" not in line
+            self._append([("engine: ", "dim"),
+                          (line + "\n", "green" if on_gpu else "amber")])
 
     def _append(self, parts):
         self.feed.configure(state="normal")

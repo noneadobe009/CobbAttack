@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>CobbAttack — Install (plain VoiceAttack)</title>
+<title>CobbAttack — Install Instruction</title>
 <style>
 :root { --bg:#10141a; --panel:#1a212b; --text:#d8dee6; --dim:#8a97a6;
         --gold:#f2c14e; --green:#79dfa4; --blue:#6fb3e0; --red:#e07a6a;
@@ -21,38 +21,70 @@ code, pre { background:var(--field); border-radius:6px; padding:2px 7px;
         font:13px Consolas, monospace; color:var(--green); }
 pre { padding:10px 14px; overflow-x:auto; }
 .warn { color:var(--gold); } .bad { color:var(--red); }
+a { color:var(--blue); }
 table { border-collapse:collapse; width:100%; margin:6px 0; }
-td { border:1px solid var(--border); padding:7px 10px; font-size:14px; }
+td, th { border:1px solid var(--border); padding:7px 10px; font-size:14px; text-align:left; }
+th { color:var(--dim); font-weight:600; }
+.map { border-color:#6b5a2a; }
+.map h2 { color:var(--gold); }
 .daily { border-color:#3a6b4d; }
 .daily h2 { color:var(--green); }
+.deeper { font-size:.85rem; color:var(--dim); margin-top:8px; }
 </style>
 </head>
 <body><div class="wrap">
-<h1>🛩️ CobbAttack — Install</h1>
-<div class="sub">For plain VoiceAttack with your own commands (no VAICOM).
-Ten steps, about ten minutes. VAICOM users: use <b>SETUP.html</b> instead.</div>
+<h1>🛩️ CobbAttack — Install Instruction</h1>
+<div class="sub">Your own VoiceAttack commands, spoken — fast, local, GPU-powered.
+Ten steps, about ten minutes. Using VAICOM for DCS? Use the full
+<a href="https://sextonjerome-cmyk.github.io/Cobb/SETUP.html">Illustrated Setup
+Manual</a> instead — this page is the quick path for plain VoiceAttack.</div>
+
+<div class="step map"><h2>🗺️ Before you start — where everything goes</h2>
+<p style="margin:4px 0 10px">Grab the zip from the
+<a href="https://github.com/sextonjerome-cmyk/Cobb/releases/latest"><b>latest
+release</b></a>. There are only two locations to care about:</p>
+<table>
+<tr><th>What</th><th>Where it goes</th></tr>
+<tr><td>The unzipped <b>CobbAttack folder</b> (app, engine, models, guides)</td>
+<td>Anywhere simple, e.g. <code>C:\CobbAttack</code> — <b class="bad">NOT inside
+Program Files</b></td></tr>
+<tr><td>One small folder from inside it:<br><code>third_party\WhisperAttackServerCommand</code></td>
+<td>Into <b>VoiceAttack's</b> <code>Apps</code> folder, usually<br>
+<code>C:\Program Files (x86)\VoiceAttack\Apps\</code></td></tr>
+</table>
+<p style="margin:8px 0 0">That's the whole map: everything lives in your CobbAttack
+folder, and exactly <b>one</b> plugin folder is copied over to VoiceAttack.
+Nothing is downloaded, nothing goes online.</p></div>
 
 <div class="step"><h2><span class="n">1</span>Unzip</h2>
-Unzip <code>CobbAttack.zip</code> somewhere simple like <code>C:\CobbAttack</code>.
-<b>Not</b> inside Program Files.</div>
+Unzip <code>CobbAttack.zip</code> to <code>C:\CobbAttack</code> (or any simple
+folder — just <b>not</b> Program Files, which blocks the app from saving your
+word fixes).</div>
 
-<div class="step"><h2><span class="n">2</span>Install the plugin (one folder copy)</h2>
+<div class="step"><h2><span class="n">2</span>Copy the plugin (one folder)</h2>
 Copy the folder <code>third_party\WhisperAttackServerCommand</code> into
 <pre>C:\Program Files (x86)\VoiceAttack\Apps\</pre>
-No downloads — the plugin is bundled.<br>
 <span style="font-size:.85rem;color:var(--dim)">Installed VoiceAttack somewhere
-else? Find its <code>Apps</code> folder there instead — in VoiceAttack: wrench
-icon → the install path is shown at the bottom (or right-click the VoiceAttack
-shortcut → Open file location).</span></div>
+else? Right-click your VoiceAttack shortcut → Open file location → use the
+<code>Apps</code> folder there.</span>
+<div class="deeper">📸 Want screenshots of this?
+<a href="https://sextonjerome-cmyk.github.io/Cobb/SETUP.html#install">Illustrated
+Manual → Install</a></div></div>
 
 <div class="step"><h2><span class="n">3</span>Turn ON plugin support</h2>
-VoiceAttack → wrench icon (Options) → tick <b>Enable Plugin Support</b> →
-restart VoiceAttack when it asks.</div>
+VoiceAttack → wrench icon (Options) → tick <b>Enable Plugin Support</b> → restart
+VoiceAttack when it asks.
+<div class="deeper">📸 Screenshots of every VoiceAttack setting:
+<a href="https://sextonjerome-cmyk.github.io/Cobb/SETUP.html#va">Illustrated
+Manual → VoiceAttack settings</a></div></div>
 
 <div class="step"><h2><span class="n">4</span>Turn OFF VoiceAttack's own speech recognition</h2>
 Same Options screen. <span class="warn">Important</span> — otherwise Windows
 speech recognition and CobbAttack both hear you and commands fire twice.
-Your commands still work; CobbAttack becomes the ears.</div>
+Your commands still work; CobbAttack becomes the ears.
+<div class="deeper">📸 Same place:
+<a href="https://sextonjerome-cmyk.github.io/Cobb/SETUP.html#va">Illustrated
+Manual → VoiceAttack settings</a></div></div>
 
 <div class="step"><h2><span class="n">5</span>Wire your talk button</h2>
 In your profile, add two commands:
@@ -63,9 +95,12 @@ In your profile, add two commands:
 <tr><td>talk button <b>release</b></td>
 <td>same plugin → context: <code>Stop Whisper Recording</code></td></tr>
 </table>
-Type the context text <b>exactly</b> — a typo fails silently with no error anywhere.</div>
+Type the context text <b>exactly</b> — a typo fails silently with no error anywhere.
+<div class="deeper">📸 Click-by-click with pictures:
+<a href="https://sextonjerome-cmyk.github.io/Cobb/SETUP.html#buttons">Illustrated
+Manual → Buttons</a></div></div>
 
-<div class="step"><h2><span class="n">6</span>Add your profile so your commands are recognized</h2>
+<div class="step"><h2><span class="n">6</span>Add your profile (so your commands are recognized)</h2>
 In VoiceAttack: profile pencil icon → <b>Export Profile</b> → save the
 <code>.vap</code> file anywhere. Then open the <b>📖 FLIGHT VOICE GUIDE</b>
 (button in the CobbAttack window) and drag the file onto the drop-box under
@@ -95,13 +130,15 @@ Windows Firewall may ask once → <b>Allow</b>. Everything stays on your PC
 
 <div class="step daily"><h2>✔ Daily use</h2>
 <b>Fix a mishear:</b> click the wrong word in a blue <code>heard:</code> line — or
-hold the <b>left</b> mouse button and sweep across several words, then
-<b>right-click</b> the highlighted text → <i>Teach fix</i>. Type what it should
-be, press Add. Works immediately, remembered forever.<br>
+drag across several words: they land in the teach box together. Type what it
+should be, press Add. Works immediately, remembered forever.<br>
 <b>Undo a bad fix:</b> right-click the feed → <i>Undo fix</i>.<br>
 <b>Clear the window:</b> right-click → <i>Clear window</i>.<br>
 <b>Practice:</b> 🎯 VOICE TRAINER — scored practice, nothing sent to VoiceAttack.<br>
-<b>Stuck?</b> Everything is logged in <code>cobbattack.log</code> — send us that file.</div>
+<b>Stuck?</b> The
+<a href="https://sextonjerome-cmyk.github.io/Cobb/SETUP.html#trouble">Illustrated
+Manual → Troubleshooting</a> table covers the classics, and everything is logged
+in <code>cobbattack.log</code> — send us that file.</div>
 
 </div></body>
 </html>
