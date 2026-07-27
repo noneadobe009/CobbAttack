@@ -10,10 +10,9 @@ VoiceAttack typically in **50–85 ms** after you release the button.
 
 Named for Cobb, whose AMD card deserved better than silent CPU lag.
 
-> ### 🚀 New here? Start with these three links:
+> ### 🚀 New here? Two links:
 > **[⬇️ Download the latest release](https://github.com/sextonjerome-cmyk/Cobb/releases/latest)** — everything bundled, no Python needed
-> **[📖 Install Instruction](https://sextonjerome-cmyk.github.io/Cobb/Install-Instruction.html)** — where everything goes, in 10 friendly steps
-> **[🛠️ Setup Instruction](https://sextonjerome-cmyk.github.io/Cobb/Setup-Instruction.html)** — the illustrated manual: a screenshot for every click
+> **[🛠️ Setup Instruction](https://sextonjerome-cmyk.github.io/Cobb/Setup-Instruction.html)** — the one manual: install is step 1, then a screenshot for every click
 
 ## How it works (one breath)
 
@@ -52,6 +51,10 @@ same protocol, same plugin.
 - **Hallucination firewall**: Whisper invents text on silence ("Thank you.").
   Output must fuzzy-match (rapidfuzz ≥ 85) a phrase in your command list or it
   is dropped and logged — never sent.
+- **It tells you *why* it refused.** Every refusal carries a reason (blank audio /
+  silence filler / no command close enough / button released too fast), so the
+  window can say `✗ NOT A COMMAND — nothing sent` with the closest match and its
+  score instead of a shrug.
 - **Recipient preservation**: "Two, rejoin" matches recipient + command
   separately and re-joins ("2 rejoin"), so you address one wingman, not the
   whole flight.
@@ -69,8 +72,19 @@ same protocol, same plugin.
 - 🎯 **Voice Trainer**: profile-verified practice phrases, ✓ auto-advance,
   ✗ one-click TEACH FIX, session score. Nothing is sent to VoiceAttack while
   training. (Rumor has it there's a bonus round.)
-- 🛠️ **SETUP MANUAL** button → Setup-Instruction.html; 📖 flight guide → command
-  cheatsheet. A rotating fighter-pilot joke on every launch.
+- **Refused commands are loud, not silent**: a red `✗ NOT A COMMAND — nothing sent`
+  line plus an error beep, the reason underneath, and a clickable **why?** that
+  opens the troubleshoot page at the matching explanation.
+- **Minimize goes to the system tray** (`tray.py`) — out of the taskbar, still
+  listening; left-click the icon to return, right-click for Show/Quit. The X
+  button still quits, so the app can't be "lost". No tray library → minimize
+  simply behaves the old way.
+- 🛠️ **SETUP INSTRUCTION** → the manual; 📖 **FLIGHT VOICE GUIDE** → command
+  cheatsheet; 🚑 **TROUBLESHOOT** (red) → live diagnostics page. A rotating
+  fighter-pilot joke on every launch.
+- **One-click start**: `Start with VoiceAttack.bat` launches VoiceAttack
+  (elevated) and CobbAttack together, skipping whatever is already running.
+  `Add to Start Menu.bat` makes both shortcuts.
 
 ### VAICOM auto-repair (vaicom_patch.py)
 CobbAttack re-applies these at every startup (VoiceAttack erases them on each
@@ -86,9 +100,15 @@ launch; harmless if VAICOM isn't installed):
   mission end (its own 60 s reconnect timer has a null-crash bug).
 
 ### Guides & tools
-- **SETUP.md / Setup-Instruction.html** — illustrated, screenshot-per-click setup for the
-  full VAICOM path. **Install-Instruction.html/.md** — the 10-step path for
-  plain VoiceAttack (no VAICOM); opens automatically on first launch.
+- **SETUP.md / Setup-Instruction.html** — the single manual: install (step 1) through
+  VAICOM settings, screenshot per click. Opens automatically on first launch.
+  (The separate Install Instruction was folded into it — one manual, one link.)
+- **troubleshoot.py** — the 🚑 button: writes `troubleshoot.html` from live state
+  (green/red check of engine device, ports, WASC plugin, VAICOM lua patches,
+  command list, mic) plus every call this session with the exact refusal reason
+  and fix, a "VoiceAttack/VAICOM did the wrong thing" section for problems
+  downstream of us, and the log tail. Port checks **bind** rather than connect —
+  connecting to :65433 would hand VoiceAttack an empty command.
 - `tools/make_cheatsheet.py` — flight-phase command cheatsheet
   (`commands-cheatsheet.html`) with hover tooltips and your custom commands.
 - `tools/fake_va.py` + `tools/send_ctl.py` — full test harness, no VoiceAttack
@@ -101,10 +121,9 @@ launch; harmless if VAICOM isn't installed):
 
 ## Quick start
 
-- **Plain VoiceAttack (Cobb's path):** [Install-Instruction.md](Install-Instruction.md) —
-  10 steps, ~10 minutes (also opens as a page on first launch).
-- **VAICOM PRO/CE users:** [SETUP.md](SETUP.md) or the illustrated
-  [Setup-Instruction.html](Setup-Instruction.html).
+- **Users:** [SETUP.md](SETUP.md), or the illustrated
+  [Setup-Instruction.html](Setup-Instruction.html) — same guide with a screenshot
+  for every click. Installing is step 1; it also opens on first launch.
 - **Developers:** `pip install -r requirements.txt`, `python main.py`
   (`--nogui` for console, `--wav file.wav` for a one-shot test). Test without
   VoiceAttack: `python tools/fake_va.py` in one terminal,

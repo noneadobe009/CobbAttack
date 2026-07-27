@@ -293,14 +293,22 @@ def _patch_file(path, transform, label):
 
 
 def apply(settings):
+    # The two files are patched independently on purpose. VAICOM only writes its
+    # device script into DCS when it exports; a DCS update can wipe it. That used
+    # to abort the whole function and silently skip the radio-panel self-heal —
+    # the repair that keeps radios alive across a mission restart — even though
+    # that file was sitting right there, unpatched.
     device = _find_lua(settings, DEVICE_REL)
-    if device is None:
-        log.info("VAICOM device script not found — skipping patch (fine if no VAICOM/DCS)")
-        return
-    _patch_file(device, _transform, "VAICOM second-mission fix")
+    if device is not None:
+        _patch_file(device, _transform, "VAICOM second-mission fix")
+    else:
+        log.info("VAICOM device script not found — skipping that patch "
+                 "(fine if no VAICOM/DCS, or VAICOM hasn't exported yet)")
     panel = _find_lua(settings, PANEL_REL)
     if panel is not None:
         _patch_file(panel, _transform_panel, "VAICOM radio-panel self-heal")
+    elif device is None:
+        log.info("no VAICOM lua files found at all — nothing to repair")
 
 
 def start_watch(settings, interval=5.0):

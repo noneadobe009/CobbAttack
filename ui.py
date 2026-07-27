@@ -11,12 +11,14 @@ import os
 import queue
 import re
 import webbrowser
+import winsound
 import tkinter as tk
 from tkinter import font as tkfont
 from tkinter import ttk
 
 import config
 import jokes
+import tray as tray_mod
 
 # Dark cockpit-ish palette.
 BG = "#14181d"
@@ -101,12 +103,13 @@ class RoundBox(tk.Canvas):
 class CobbWindow:
     def __init__(self, on_teach, on_close, on_suggest=None,
                  on_practice=None, practice_phrases=None,
-                 on_unteach=None):
+                 on_unteach=None, on_troubleshoot=None):
         self._on_teach_cb = on_teach
         self.on_close = on_close
         self.on_suggest = on_suggest or (lambda word: [])
         self.on_practice = on_practice or (lambda on: None)
         self.on_unteach = on_unteach
+        self.on_troubleshoot = on_troubleshoot
         self.practice_phrases = practice_phrases or []
         self.events = queue.Queue()
         self._popup = None
@@ -124,6 +127,11 @@ class CobbWindow:
         self.root.geometry("700x640")
         self.root.minsize(600, 540)
         self.root.protocol("WM_DELETE_WINDOW", self._close)
+        # Minimize → system tray (X still quits). Created before the widgets so a
+        # failed tray never blocks the window from appearing.
+        self.tray = tray_mod.Tray(self.root, on_show=self._restore, on_quit=self._close)
+        self._hidden = False
+        self.root.bind("<Unmap>", self._on_unmap)
         try:
             self.root.iconbitmap(os.path.join(config.ROOT, "cobbattack.ico"))
         except tk.TclError:
@@ -171,6 +179,33 @@ class CobbWindow:
             hero_lbl.bind("<Enter>", _hero_pop)
             # the pop-over covers the small icon, so the pointer "leaves" via big_lbl
             big_lbl.bind("<Leave>", lambda e: big_lbl.place_forget())
+
+            # click (on either the icon or its hover pop-over) → full-size art,
+            # centered; click the big picture to dismiss
+            xl_png = os.path.join(here, "cob-hero-200.png")
+            self._hero_img_xl = (tk.PhotoImage(file=xl_png)
+                                 if os.path.exists(xl_png) else self._hero_img_big)
+            xl_lbl = tk.Label(self.root, image=self._hero_img_xl, bg=BG, bd=0,
+                              cursor="hand2")
+
+            def _hero_open(_e):
+                big_lbl.place_forget()
+                # in place: centered on the icon like the hover pop, clamped to
+                # the window's top-left so the art stays visible
+                x = (hero_lbl.winfo_rootx() - self.root.winfo_rootx()
+                     + (hero_lbl.winfo_width() - self._hero_img_xl.width()) // 2)
+                y = (hero_lbl.winfo_rooty() - self.root.winfo_rooty()
+                     + (hero_lbl.winfo_height() - self._hero_img_xl.height()) // 2)
+                xl_lbl.place(x=max(x, 0), y=max(y, 0))
+                xl_lbl.lift()
+
+            hero_lbl.configure(cursor="hand2")
+            big_lbl.configure(cursor="hand2")
+            hero_lbl.bind("<Button-1>", _hero_open)
+            big_lbl.bind("<Button-1>", _hero_open)
+            # mouse wandering off the big art (or a click on it) dismisses it
+            xl_lbl.bind("<Leave>", lambda e: xl_lbl.place_forget())
+            xl_lbl.bind("<Button-1>", lambda e: xl_lbl.place_forget())
         else:  # Cobb-proof fallback: the drawn mini-hero
             hero = tk.Canvas(header, width=48, height=30, bg=BG, highlightthickness=0)
             hero.pack(side="left", padx=(0, 8))
@@ -200,6 +235,10 @@ class CobbWindow:
         self.guide_btn = RoundButton(toolbar, "📖  FLIGHT VOICE GUIDE", fg=BLUE,
                                      border="#3d5a7a", command=self._open_cheatsheet)
         self.guide_btn.pack(side="left", padx=(8, 0))
+        self.trouble_btn = RoundButton(toolbar, "🚑  TROUBLESHOOT", fg=RED,
+                                       border="#8a3a2e", hover="#3a2622",
+                                       command=self._open_troubleshoot)
+        self.trouble_btn.pack(side="left", padx=(8, 0))
 
         # --- Activity feed ---
         # height=8: request few rows so the teach bar below always fits; expand=True
@@ -268,6 +307,10 @@ class CobbWindow:
                            ("red", RED), ("blue", BLUE), ("text", TEXT)):
             self.feed.tag_configure(tag, foreground=color)
         self.feed.tag_configure("heard", foreground=BLUE, underline=False)
+        self.feed.tag_configure("why", foreground=BLUE, underline=True)
+        self.feed.tag_bind("why", "<Button-1>", lambda e: self._open_troubleshoot())
+        self.feed.tag_bind("why", "<Enter>", lambda e: self.feed.configure(cursor="hand2"))
+        self.feed.tag_bind("why", "<Leave>", lambda e: self.feed.configure(cursor="arrow"))
         # release (not press) so drag-selecting words in a heard line still works
         self.feed.tag_bind("heard", "<ButtonRelease-1>", self._click_word)
         self.feed.tag_bind("heard", "<Enter>", lambda e: self.feed.configure(cursor="hand2"))
@@ -423,6 +466,33 @@ class CobbWindow:
 
     def _ev_dropped(self, reason):
         self._append([("       ", "dim"), (reason + "\n", "amber")])
+
+    # Why-lines for a refused call. Deliberately loud: the old feed said
+    # "dropped — silence/noise" for every cause, which explained nothing.
+    REJECT_DETAIL = {
+        "blank": "there was no speech in that clip — check your microphone",
+        "hallucination": "that was silence, not words — check your microphone",
+        "too_short": "the talk button was released too fast",
+    }
+
+    def _ev_rejected(self, reason, raw="", cleaned="", best=None, score=0,
+                     threshold=85):
+        if reason == "no_match":
+            detail = f"nothing in your profile matches “{cleaned or raw}”"
+            if best:
+                detail += f"  ·  closest: “{best}” {score}/{threshold}"
+        else:
+            detail = self.REJECT_DETAIL.get(reason, "refused by the safety filter")
+        self._append([("       ", "dim"),
+                      ("✗  NOT A COMMAND — nothing sent\n", "red"),
+                      ("       ", "dim"), (detail + "  ", "amber"),
+                      ("why?\n", "blue")])
+        # tag the trailing "why?" so clicking it opens the troubleshoot page
+        # ("why?\n" = 5 chars back from the end of the inserted text)
+        self.feed.configure(state="normal")
+        self.feed.tag_add("why", "end-1c -5c", "end-1c -1c")
+        self.feed.configure(state="disabled")
+        winsound.MessageBeep(winsound.MB_ICONHAND)
 
     def _ev_error(self, message):
         self._append([("error  ", "red"), (message + "\n", "red")])
@@ -725,7 +795,38 @@ class CobbWindow:
         else:
             self.post("error", message="no setup manual yet — run tools\\make_setup.py")
 
+    def _open_troubleshoot(self):
+        if self.on_troubleshoot is None:
+            return
+        try:
+            path = self.on_troubleshoot()
+        except Exception as e:  # a diagnostics page must never take the app down
+            self.post("error", message=f"troubleshoot page failed: {e}")
+            return
+        self._append([("       ", "dim"),
+                      ("troubleshoot page opened in your browser\n", "dim")])
+        webbrowser.open(path)
+
+    # ---- minimize to tray ----
+    def _on_unmap(self, event):
+        if event.widget is not self.root or self._hidden:
+            return
+        if self.root.state() != "iconic":
+            return
+        if self.tray.show_icon():
+            self._hidden = True
+            self.root.withdraw()  # off the taskbar; the tray icon is the way back
+
+    def _restore(self):
+        self._hidden = False
+        self.tray.hide_icon()
+        self.root.deiconify()
+        self.root.state("normal")
+        self.root.lift()
+        self.root.focus_force()
+
     def _close(self):
+        self.tray.stop()
         self.on_close()
         self.root.destroy()
 

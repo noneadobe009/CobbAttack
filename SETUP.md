@@ -8,6 +8,27 @@ Voice recognition for VAICOM that actually uses your AMD graphics card.
 It replaces the WhisperAttack server program only — everything else in your
 VoiceAttack/VAICOM setup stays the same.
 
+**This is the only manual** — installing is the first section, configuration is the
+rest. (There used to be a separate Install Instruction; it was folded in here so
+there's one place to look.)
+
+## Where every file goes
+
+Two locations, that's the whole map:
+
+| What | Where it goes |
+|---|---|
+| The unzipped **CobbAttack folder** (app, engine, models, guides) | Anywhere simple, e.g. `C:\CobbAttack` — **NOT inside Program Files**, which blocks the app from saving your word fixes |
+| One folder from inside it: `third_party\WhisperAttackServerCommand` | Into **VoiceAttack's** `Apps` folder, usually `C:\Program Files (x86)\VoiceAttack\Apps\` |
+
+1. Unzip `CobbAttack.zip` to `C:\CobbAttack` (or any simple folder outside Program Files).
+2. Copy the plugin folder as above. Installed VoiceAttack somewhere else? Right-click
+   your VoiceAttack shortcut → Open file location → use the `Apps` folder there.
+3. Optional: run `Add to Start Menu.bat` once. It makes two Start Menu shortcuts —
+   **CobbAttack**, and **CobbAttack + VoiceAttack** which starts both in one click.
+
+Nothing is downloaded, nothing goes online.
+
 ## What you need installed
 
 1. **VoiceAttack** (paid, voiceattack.com) — you already have it.
@@ -141,7 +162,9 @@ Only these matter — everything not listed stays at its default.
    too, but you must tune each radio to the right frequency yourself.
 1. Start VoiceAttack (with your VAICOM profile).
 2. Double-click `CobbAttack.exe` (fallback: `run-cobbattack.bat` with Python).
-   Want it in your Start Menu? Run `Add to Start Menu.bat` once.
+   Or use the **CobbAttack + VoiceAttack** shortcut (`Start with VoiceAttack.bat`):
+   it starts VoiceAttack elevated, waits for it to load, then starts CobbAttack —
+   and skips anything that's already running, so no needless admin prompt.
 3. **Look at the first lines of the window.** You want:
    `>>> DEVICE: Vulkan GPU — AMD Radeon ... <<<`
    If it says `CPU — no GPU acceleration`, tell us — that's the exact problem
@@ -150,6 +173,23 @@ Only these matter — everything not listed stays at its default.
 4. Press your PTT in DCS, speak normally ("Chief, request launch", "Texaco,
    Enfield 1-1, request refuel"), release. The window shows what it heard,
    what it cleaned it up to, and the time it took.
+
+## Daily use — the buttons and the tray
+
+- **Minimize goes to the system tray.** The window leaves the taskbar and becomes a
+  corn icon by the clock, still listening. Left-click it to bring it back;
+  right-click for Show / Quit. The **X** button still quits.
+- **🚑 TROUBLESHOOT** (red button) — builds `troubleshoot.html` from live state and
+  opens it: a green/red check of everything that must be true right now, plus every
+  call this session with the exact reason anything was refused. Start here when
+  something's wrong.
+- **📖 FLIGHT VOICE GUIDE** — every phrase your profile knows, plus the `.vap` drop-box.
+- **🎯 VOICE TRAINER** — scored practice; nothing reaches VoiceAttack while it runs.
+
+**"✗ NOT A COMMAND — nothing sent"** (red line + a beep) means it heard you and
+refused to guess. The line below says why: no speech in the clip, or nothing in your
+profile is close enough — with the closest match and its score against the threshold.
+Click **why?** on that line to open the troubleshoot page.
 
 ## Teach it the real VAICOM commands (recommended)
 
@@ -215,6 +255,16 @@ into the `models` folder and set `"model": "ggml-small.en.bin"` in
 
 ## Troubleshooting
 
+**Press 🚑 TROUBLESHOOT in the app first** — it checks all of this live against your
+own machine and explains every call you've made this session. The list below is the
+short reference.
+
+- **"NOT A COMMAND" on a real command** → the phrase isn't in the list CobbAttack
+  learned. VAICOM command → redo the keyword export. Your own command → re-export
+  your profile. The 🚑 page shows the closest match and how far off the score was.
+- **"NOT A COMMAND" on everything, blank audio** → the microphone isn't being
+  captured: wrong default input device, muted mic, or the button released too early.
+- **Window vanished** → you minimized it; it's the corn icon by the clock.
 - **Nothing happens on PTT** → VoiceAttack running? WASC plugin installed and
   enabled (VoiceAttack → Options → Enable plugin support)? TX buttons have the
   Start/Stop actions?

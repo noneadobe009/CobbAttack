@@ -6,3 +6,6 @@ rapidfuzz==3.14.1
 # Kneeboard-note parity feature only; app runs without them.
 pyperclip==1.11.0
 keyboard==0.13.5
+# Minimize-to-tray only; without these, minimize just uses the taskbar as before.
+pystray==0.19.5
+pillow==12.3.0

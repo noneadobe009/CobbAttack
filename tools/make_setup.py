@@ -1,5 +1,10 @@
 """Build Setup-Instruction.html — the pretty, shippable version of SETUP.md.
 
+This is the ONLY manual. It used to be two (an Install Instruction plus this), which
+meant two links, two places to look, and a "which one am I in?" question every time.
+Installing is now step 1 here; everything after it is configuration, in the order you
+actually do it.
+
 Same dark cockpit look as the flight guide (commands-cheatsheet.html): hero corn,
 accent-colored step sections, checkbox panels, and real screenshots (embedded from
 screenshots/, click any to zoom). Content is hand-synced with SETUP.md — if you edit
@@ -198,8 +203,8 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8">
     card</b>. It replaces WhisperAttack's server program only — everything else in
     your VoiceAttack/VAICOM setup stays the same.</p></div>
   <div class="card"><h3>🗺️ The short version</h3>
-    <p>① Install the four pieces → ② set VoiceAttack &amp; VAICOM exactly as
-    pictured → ③ bind two talk buttons → ④ run it and check the
+    <p>① Unzip and copy one plugin folder → ② set VoiceAttack &amp; VAICOM exactly
+    as pictured → ③ bind two talk buttons → ④ run it and check the
     <b class="k">Vulkan GPU</b> line → ⑤ fly.</p></div>
   <div class="card"><h3>🕹️ Your two buttons</h3>
     <p><b class="k">TX1</b> — radio 1 · ATC, AWACS, tanker, ground crew</p>
@@ -216,49 +221,73 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8">
   <a class="chip" href="#run">▶️ First run</a>
   <a class="chip" href="#teach">📖 Teach it</a>
   <a class="chip" href="#custom">⚙️ Your commands</a>
+  <a class="chip" href="#daily">🕹️ Daily use</a>
   <a class="chip" href="#trouble">🚑 Troubleshooting</a>
 </nav>
 
-<div class="ok">📖 <b>Coming from the
-<a href="https://sextonjerome-cmyk.github.io/Cobb/Install-Instruction.html">Install
-Instruction</a>?</b> Perfect — your files are already in place, so skip step 1
-and start at <a href="#va"><b>step 2, VoiceAttack settings</b></a>. New here
-without installing yet? Do the
-<a href="https://sextonjerome-cmyk.github.io/Cobb/Install-Instruction.html">Install
-Instruction</a> first — it shows where everything goes.</div>
+<div class="ok">📖 <b>This is the only manual — start at step 1 and work down.</b>
+Steps 1–2 are installing (about ten minutes, and you do them once). Steps 3–6 are
+the settings that have to match exactly. Steps 7–8 are optional polish. Already
+have the files in place? Jump to <a href="#va"><b>step 3, VoiceAttack
+settings</b></a>.</div>
 <p style="color:var(--dim);font-size:.88rem">Every screenshot below is from the
 verified working setup — <b>click any picture to zoom</b>. If your screen matches
 the pictures, you're done with that step.</p>
 
 <section class="sec" id="install" style="--acc:#5dd08c">
-<h2><span class="stepno">1</span>🧰 Install the four pieces</h2>
-<p class="tag">Three downloads and a pip install. You likely have the first two.</p>
+<h2><span class="stepno">1</span>🧰 Where every file goes</h2>
+<p class="tag">The whole map: one folder for CobbAttack, and one small folder copied
+into VoiceAttack. Nothing is downloaded at runtime, nothing goes online.</p>
+<table class="fix">
+<tr><th>What</th><th>Where it goes</th></tr>
+<tr><td style="color:var(--text)">The unzipped <b class="k">CobbAttack folder</b>
+(app, engine, models, guides)</td>
+<td>Anywhere simple, e.g. <code>C:\\CobbAttack</code> — <b>NOT inside Program
+Files</b>, which blocks the app from saving your word fixes</td></tr>
+<tr><td style="color:var(--text)">One folder from inside it:
+<code>third_party\\WhisperAttackServerCommand</code></td>
+<td>Into <b class="k">VoiceAttack's</b> <code>Apps</code> folder, usually
+<code>C:\\Program Files (x86)\\VoiceAttack\\Apps\\</code></td></tr>
+</table>
 <ol>
-  <li><b class="k">VoiceAttack</b> (paid, voiceattack.com) — you already have it.</li>
+  <li><b class="k">Unzip</b> <code>CobbAttack.zip</code> to <code>C:\\CobbAttack</code>
+      (or any simple folder outside Program Files).</li>
+  <li><b class="k">Copy the plugin folder</b> as in the table above. Installed
+      VoiceAttack somewhere else? Right-click your VoiceAttack shortcut → Open file
+      location → use the <code>Apps</code> folder there. Windows will ask for
+      admin — say yes.</li>
+  <li>Optional: run <code>Add to Start Menu.bat</code> once. It creates two Start
+      Menu shortcuts — <b class="k">CobbAttack</b>, and
+      <b class="k">CobbAttack + VoiceAttack</b> which starts both together.</li>
+</ol>
+<div class="ok">✔ Already in the box: the whisper.cpp engine (Vulkan + CPU builds),
+the <code>base.en</code> model, and the WASC plugin — inside <code>bin\\</code>,
+<code>models\\</code> and <code>third_party\\</code>. There is nothing else to
+download, and <b>no Python needed</b>: CobbAttack ships as
+<code>CobbAttack.exe</code>.</div>
+<div class="warn">⚠️ If your antivirus ever quarantines the exe (rare false alarm),
+allow it — or use the fallback: install Python 3.13 with "Add to PATH" ticked, run
+<code>pip install -r requirements.txt</code>, and start with
+<code>run-cobbattack.bat</code> instead.</div>
+</section>
+
+<section class="sec" id="pieces" style="--acc:#4a9d78">
+<h2><span class="stepno">2</span>📦 The two programs you supply</h2>
+<p class="tag">You almost certainly have both already. CobbAttack replaces
+WhisperAttack's server program only — everything else in your setup stays.</p>
+<ol>
+  <li><b class="k">VoiceAttack</b> (paid, voiceattack.com).</li>
   <li><b class="k">VAICOM PRO Community Edition</b> (free): the <code>.msi</code> from
       <a href="https://github.com/Penecruz/VAICOM-Community/releases">github.com/Penecruz/VAICOM-Community/releases</a>.
       Version 3.x — it has numeric keywords built in.</li>
-  <li><b class="k">The WASC VoiceAttack plugin</b> — already in the box: copy the
-      <code>WhisperAttackServerCommand</code> folder from CobbAttack's
-      <code>third_party\\</code> into <code>C:\\Program Files (x86)\\VoiceAttack\\Apps\\</code>
-      (Windows will ask for admin — say yes). Then VoiceAttack → Options →
-      <b>Enable Plugin Support</b> and restart VoiceAttack.
-      <span style="color:var(--dim)">(The plugin comes from the
-      <a href="https://github.com/nikoelt/WhisperAttack">WhisperAttack</a> project,
-      MIT-licensed — license file included.)</span></li>
-  <li>That's it — <b>no Python needed</b>: CobbAttack ships as
-      <code>CobbAttack.exe</code>. (If your antivirus ever quarantines the exe —
-      rare false alarm — allow it, or use the fallback: install Python 3.13 with
-      "Add to PATH" ticked, run <code>pip install -r requirements.txt</code>, and
-      start with <code>run-cobbattack.bat</code> instead.)</li>
 </ol>
-<div class="ok">✔ Already in the box: the whisper.cpp engine (Vulkan + CPU builds)
-and the <code>base.en</code> model ship inside CobbAttack's <code>bin\\</code> and
-<code>models\\</code> folders — there is nothing else to download.</div>
+<p style="color:var(--dim)">The WASC plugin you copied in step 1 comes from the
+<a href="https://github.com/nikoelt/WhisperAttack">WhisperAttack</a> project,
+MIT-licensed — license file included.</p>
 </section>
 
 <section class="sec" id="va" style="--acc:#5aa7e0">
-<h2><span class="stepno">2</span>🎛️ VoiceAttack settings (v2.1.8, verified)</h2>
+<h2><span class="stepno">3</span>🎛️ VoiceAttack settings (v2.1.8, verified)</h2>
 <p class="tag">Options (wrench icon). Only these matter — everything not listed stays
 at its default. Match the pictures.</p>
 <div class="panelgrid">
@@ -289,7 +318,7 @@ it — click it again.</div>
 </section>
 
 <section class="sec" id="vaicom" style="--acc:#e8b33e">
-<h2><span class="stepno">3</span>📻 VAICOM settings (Community 3.1.5.2, verified)</h2>
+<h2><span class="stepno">4</span>📻 VAICOM settings (Community 3.1.5.2, verified)</h2>
 <p class="tag">Open the VAICOM window (LCtrl+LAlt+C). Tick EXACTLY these; leave
 everything else unticked/default. Match the pictures.</p>
 <div class="ok">🆕 <b>Fresh VAICOM install?</b> Start VoiceAttack once (as admin) so
@@ -297,7 +326,7 @@ VAICOM creates its files. If the profile "VAICOM PRO for DCS World" isn't in
 VoiceAttack's profile list, import it: profile dropdown → the little import icon →
 <code>C:\\Program Files (x86)\\VoiceAttack\\Apps\\VAICOMPRO\\Profiles\\VAICOM PRO for
 DCS World.vap</code>. Then fill the keywords once: EDITOR tab → <b>FINISH</b> → paste
-into AI Communications (step 6's warning box explains the paste).</div>
+into AI Communications (step 7's warning box explains the paste).</div>
 <div class="panelgrid">
   <div class="vpanel"><h4>PREFERENCES</h4><ul>
     <li class="on">VSPX Processing</li>
@@ -339,7 +368,7 @@ away — ATC never answers, and the only clue is a quiet orange log line.</div>
 </section>
 
 <section class="sec" id="buttons" style="--acc:#e8a04b">
-<h2><span class="stepno">4</span>🕹️ Push-to-talk buttons</h2>
+<h2><span class="stepno">5</span>🕹️ Push-to-talk buttons</h2>
 <p class="tag">Two buttons is plenty for the Hornet in single player.</p>
 <ul>
   <li><b class="k">TX1</b> = radio 1 — ATC, AWACS, tanker, <b>and ground crew</b>
@@ -381,8 +410,11 @@ fails silently: the button will move the radio but never record.</div>
   <li>In DCS: OPTIONS → GAMEPLAY → <b class="k">Easy Communication</b>. ON is the
       simple choice: calls just work. OFF works too — but then you must tune each
       radio to the recipient's real frequency yourself, or nobody answers.</li>
-  <li>Start <b class="k">VoiceAttack</b> (with your VAICOM profile).</li>
-  <li>Double-click <b class="k">CobbAttack.exe</b>.</li>
+  <li>Start <b class="k">VoiceAttack</b> (with your VAICOM profile), then
+      double-click <b class="k">CobbAttack.exe</b> — or use the one-click
+      <b class="k">CobbAttack + VoiceAttack</b> shortcut, which starts VoiceAttack
+      (admin prompt), waits for it, and then starts CobbAttack. Anything already
+      running is left alone.</li>
   <li><b>Look at the first lines of the window:</b>
     <div class="device"><span class="good">✔ device: Vulkan GPU — AMD Radeon …</span> ← what you want<br>
     <span class="bad">✘ device: CPU — no GPU acceleration</span> ← tell us; update AMD
@@ -398,7 +430,7 @@ when DCS starts.</div>
 </section>
 
 <section class="sec" id="teach" style="--acc:#e8c94b">
-<h2><span class="stepno">6</span>📖 Teach it the real VAICOM commands</h2>
+<h2><span class="stepno">7</span>📖 Teach it the real VAICOM commands</h2>
 <p class="tag">With this done, CobbAttack only ever sends phrases that actually exist
 in your profile — near-misses get corrected, garbage gets dropped.</p>
 <ol>
@@ -438,7 +470,7 @@ into <code>models</code> and set <code>"model": "ggml-small.en.bin"</code> in
 </section>
 
 <section class="sec" id="custom" style="--acc:#f0d060">
-<h2><span class="stepno">7</span>⚙️ Your own voice commands (optional)</h2>
+<h2><span class="stepno">8</span>⚙️ Your own voice commands (optional)</h2>
 <p class="tag">Made your own VoiceAttack command — like "turn on the lights" flipping
 a cockpit switch? Two clicks and CobbAttack learns it.</p>
 <ol>
@@ -522,17 +554,47 @@ the talk-button commands only. Build the command, then re-drop your profile
 export above.</div>
 </section>
 
+<section class="sec" id="daily" style="--acc:#7fc8a9">
+<h2><span class="stepno">9</span>🕹️ Daily use — the four buttons and the tray</h2>
+<p class="tag">Everything you'll actually touch once it works.</p>
+<ul>
+  <li><b class="k">Minimize goes to the system tray.</b> The window disappears from
+      the taskbar and becomes a corn icon next to the clock — it keeps listening the
+      whole time. Left-click the icon to bring it back, or right-click it for
+      Show / Quit. The <b>X</b> button still quits properly, so there's no way to
+      lose track of it.</li>
+  <li><b class="k">🚑 TROUBLESHOOT</b> (the red button) — opens a page that checks
+      everything live and explains every call you've made this session: what was
+      heard, what was sent, and for anything refused, the exact reason and the fix.
+      Start here whenever something is wrong; it also links the log we'd ask for.</li>
+  <li><b class="k">📖 FLIGHT VOICE GUIDE</b> — every phrase your profile knows, plus
+      the drop-box for your own <code>.vap</code> export (step 8).</li>
+  <li><b class="k">🎯 VOICE TRAINER</b> — scored practice. Nothing is sent to
+      VoiceAttack while it's running.</li>
+  <li><b class="k">Fix a mishear:</b> click the wrong word in a blue <code>heard:</code>
+      line — or drag across several words to fix a whole phrase. Type what it should
+      be, press Add. Works immediately, remembered forever. Right-click the feed for
+      <b>Undo fix</b> and <b>Clear window</b>.</li>
+</ul>
+<div class="ok">🔴 <b>"✗ NOT A COMMAND — nothing sent"</b> with a beep means CobbAttack
+heard you but refused to guess. The line underneath says why (no speech in the clip,
+or nothing in your profile is close enough, with the closest match and its score).
+Click <b>why?</b> on that line to jump straight into the troubleshoot page.</div>
+</section>
+
 <section class="sec" id="trouble" style="--acc:#e06c5b">
-<h2><span class="stepno">8</span>🚑 Troubleshooting</h2>
+<h2><span class="stepno">10</span>🚑 Troubleshooting</h2>
+<p class="tag">The 🚑 button in the app does all of this live, against your actual
+machine — try it first. This table is the short reference.</p>
 <table class="fix">
 <tr><th>Symptom</th><th>Fix</th></tr>
 <tr><td>Nothing happens on PTT</td><td>VoiceAttack running? WASC plugin installed and
 plugin support enabled? TX buttons have the Start/Stop Whisper actions (spelled
 exactly)?</td></tr>
 <tr><td>Commands fire twice</td><td>VoiceAttack's own speech recognition is still on —
-disable it (step 2).</td></tr>
+disable it (step 3).</td></tr>
 <tr><td>ATC never answers</td><td>VAICOM PREFS → <b>Extended Command Set</b> must be
-ticked (step 3). Also: VAICOM only listens while DCS is unpaused, in a mission.</td></tr>
+ticked (step 4). Also: VAICOM only listens while DCS is unpaused, in a mission.</td></tr>
 <tr><td>"could not reach VoiceAttack plugin"</td><td>VoiceAttack isn't running, or the
 WASC plugin didn't load.</td></tr>
 <tr><td>"DCS is not connected"</td><td>Normal outside a mission. In a mission: unpause.
@@ -549,12 +611,22 @@ microphone — set your headset as default input in Windows Sound settings, or s
 <code>"input_device"</code> in <code>settings.json</code>.</td></tr>
 <tr><td>Windows Firewall pops up</td><td>Allow it — CobbAttack and its engine only
 talk to each other on this PC (127.0.0.1); nothing goes online.</td></tr>
-<tr><td>Still stuck</td><td>Everything is logged in <code>cobbattack.log</code> — send
-us that file.</td></tr>
+<tr><td>"NOT A COMMAND" on a real command</td><td>The phrase isn't in the list
+CobbAttack learned. If it's a VAICOM command, redo step 7. If it's your own
+VoiceAttack command, re-export your profile (step 8). The 🚑 page shows the closest
+match and its score, so you can see how far off it was.</td></tr>
+<tr><td>"NOT A COMMAND" on everything, blank audio</td><td>Your microphone isn't being
+captured — wrong default input device, muted mic, or the talk button released before
+you spoke.</td></tr>
+<tr><td>Window vanished</td><td>You minimized it — it's the corn icon by the clock.
+Click it.</td></tr>
+<tr><td>Still stuck</td><td>Press <b>🚑 TROUBLESHOOT</b> in the app: it checks
+everything live and explains this session call by call. Everything is also logged in
+<code>cobbattack.log</code> — send us that file.</td></tr>
 </table>
 </section>
 
-<footer>CobbAttack 🌽 · built for Cobb's AMD rig · guide version 2026-07-25</footer>
+<footer>CobbAttack 🌽 · built for Cobb's AMD rig · guide version 2026-07-27</footer>
 
 <div id="lightbox"><img alt=""></div>
 <script>

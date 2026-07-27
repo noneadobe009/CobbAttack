@@ -13,12 +13,22 @@ import os
 import re
 import threading
 import unicodedata
+from collections import namedtuple
 
 from rapidfuzz import fuzz, process
 
 import config
 
 log = logging.getLogger("cobb.normalize")
+
+# What the firewall decided, and why. `reason` is what the troubleshoot page and
+# the red feed line explain to the user — "dropped" with no cause was the single
+# most confusing thing about the old pipeline.
+#   ok            → text is safe to send
+#   blank         → nothing but silence/noise annotations came back
+#   hallucination → Whisper's stock invention on silence ("Thank you.")
+#   no_match      → real words, but nothing in the profile is close enough
+Verdict = namedtuple("Verdict", "text reason cleaned best score")
 
 # Whisper's favorite inventions on silence/breath noise. Exact-match after cleanup.
 _HALLUCINATIONS = {
@@ -136,6 +146,10 @@ class Normalizer:
 
     def normalize(self, raw: str):
         """Cleaned command text, or None if this should never reach the cockpit."""
+        return self.judge(raw).text
+
+    def judge(self, raw: str) -> Verdict:
+        """Same pipeline as normalize(), but says *why* when it refuses."""
         text = unicodedata.normalize("NFC", raw).lower()
         # Whisper marks non-speech as [typing], [BLANK_AUDIO], (wind), *music* —
         # annotations, not words. Remove them before punctuation stripping can
@@ -162,9 +176,12 @@ class Normalizer:
             words.append(word)
         text = " ".join(words)
 
-        if not text or text in _HALLUCINATIONS:
-            log.info("firewall: dropped %r", raw)
-            return None
+        if not text:
+            log.info("firewall: blank audio — %r held no speech", raw)
+            return Verdict(None, "blank", "", None, 0)
+        if text in _HALLUCINATIONS:
+            log.info("firewall: hallucination on silence — %r", raw)
+            return Verdict(None, "hallucination", text, None, 0)
 
         if self.commands:
             match = process.extractOne(text, self.commands, scorer=fuzz.token_sort_ratio)
@@ -180,12 +197,14 @@ class Normalizer:
                     combined = f"{rec} {m2[0]}"
                     if combined != text:
                         log.info("matched %r → %r (recipient kept)", text, combined)
-                    return combined
+                    return Verdict(combined, "ok", text, m2[0], round(m2[1]))
             if not match or match[1] < self.threshold:
                 log.info("firewall: no command match ≥%d for %r", self.threshold, text)
-                return None
+                return Verdict(None, "no_match", text,
+                               match[0] if match else None,
+                               round(match[1]) if match else 0)
             if match[0] != text:
                 log.info("matched %r → command %r (%.0f)", text, match[0], match[1])
-            text = match[0]
+            return Verdict(match[0], "ok", text, match[0], round(match[1]))
 
-        return text
+        return Verdict(text, "ok", text, None, 100)

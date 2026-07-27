@@ -26,7 +26,14 @@ normalize (numbers→digits, glossary, rapidfuzz ≥85 vs command list) → text
 
 - `main.py` — wiring; GUI by default, `--nogui` console, `--wav` one-shot test
 - `ui.py` — tkinter window (stdlib on purpose — no extra install for Cobb): status light,
-  clickable activity feed, teach-a-word box that calls `Normalizer.add_mapping` live
+  clickable activity feed, teach-a-word box that calls `Normalizer.add_mapping` live,
+  red 🚑 button, and minimize-to-tray
+- `tray.py` — system-tray icon (pystray, optional: no library → minimize just uses the
+  taskbar). Minimize hides to tray; the X button still quits
+- `troubleshoot.py` — builds `troubleshoot.html` on demand: live green/red checks
+  (engine, ports, plugin folder, VAICOM lua patches, command list) + every call this
+  session with the exact refusal reason. Port checks BIND, never connect — connecting
+  to :65433 would hand VoiceAttack an empty command
 - `config.py` — settings over `settings.json`
 - `engine.py` — whisper-server child process lifecycle + HTTP inference + device detection
 - `bridge.py` — the two TCP sockets (WhisperAttack protocol)
@@ -34,7 +41,11 @@ normalize (numbers→digits, glossary, rapidfuzz ≥85 vs command list) → text
 - `normalize.py` — cleanup pipeline + fuzzy firewall; `glossary.py`/`packs.py` — from Parlez
 - `tools/fake_va.py`, `tools/send_ctl.py` — test harness (no VoiceAttack needed)
 - `bin/` — bundled whisper.cpp binaries (Vulkan build); `models/` — ggml models (not committed)
-- `SETUP.md` — the setup guide for Cobb; keep in sync with any protocol/config change
+- `SETUP.md` / `Setup-Instruction.html` (from `tools/make_setup.py`) — **the one manual**;
+  installing is step 1 of it. Keep in sync with any protocol/config change. There was a
+  separate Install-Instruction; it was merged in on 2026-07-27, don't reintroduce it
+- `Start with VoiceAttack.bat` — one-click launcher for VoiceAttack (elevated) + CobbAttack;
+  `Add to Start Menu.bat` makes both shortcuts
 
 ## Sibling project
 

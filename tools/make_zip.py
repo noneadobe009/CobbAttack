@@ -6,8 +6,9 @@ What goes in (and the judgment calls, per .claude/rules/quality.md):
 - the app, engine binaries (Vulkan + CPU), BOTH models (base.en default,
   small.en opt-in via settings.json),
 - the bundled WASC plugin + its MIT license (third_party/),
-- both guides + the flight guide, the working commands/keywords lists so voice
-  works out of the box (Cobb refreshes them when he rebuilds keywords),
+- the setup guide (one manual — install is step 1 of it) + the flight guide, and
+  the working commands/keywords lists so voice works out of the box (Cobb
+  refreshes them when he rebuilds keywords),
 - word_mappings.txt is REPLACED by tools/word_mappings.seed.txt — the owner's
   personal voice fixes stay home.
 What stays out: logs, settings.json (machine-specific mic/model pins),
@@ -25,11 +26,12 @@ DST = os.path.join(DIST, "CobbAttack.zip")
 TOP_FILES = [
     "main.py", "ui.py", "config.py", "engine.py", "bridge.py", "recorder.py",
     "normalize.py", "jokes.py", "vaicom_patch.py", "custom_vap.py",
+    "tray.py", "troubleshoot.py",
     "requirements.txt", "run-cobbattack.bat", "Add to Start Menu.bat",
-    "cobbattack.ico",
+    "Start with VoiceAttack.bat", "cobbattack.ico",
     "cob-hero.png", "cob-hero-48.png", "cob-hero-72.png", "cob-hero-200.png",
     "cob-hero-icon.png",
-    "README.md", "Install-Instruction.md", "Install-Instruction.html",
+    "README.md",
     "SETUP.md", "Setup-Instruction.html", "commands-cheatsheet.html",
     "VAICOM-mission-restart-bug.md",
     "fuzzy_terms.txt", "commands.txt", "recipients.txt", "vaicom_keywords.txt",

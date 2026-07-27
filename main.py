@@ -12,6 +12,7 @@ import os
 import sys
 import threading
 import time
+from collections import deque
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import config
@@ -20,6 +21,7 @@ import engine as engine_mod
 import normalize as normalize_mod
 import recorder as recorder_mod
 import bridge
+import troubleshoot as troubleshoot_mod
 import vaicom_patch
 
 log = logging.getLogger("cobb")
@@ -119,11 +121,29 @@ class App:
         self._recording_since = None
         self._shutdown = threading.Event()
         self.practice_mode = threading.Event()  # trainer on: results go to the panel, not VoiceAttack
+        self.started_at = time.time()
+        # Everything the troubleshoot page explains after the fact. Capped so a
+        # long session can't grow without bound.
+        self.history = deque(maxlen=300)
 
     # ---- UI helper (safe with or without a window) ----
     def post(self, kind, **data):
         if self.window is not None:
             self.window.post(kind, **data)
+
+    def record(self, kind, **data):
+        """Keep one pipeline outcome for the troubleshoot page."""
+        self.history.append(dict(kind=kind, t=time.time(), **data))
+
+    def reject(self, reason, raw="", cleaned="", best=None, score=0):
+        """One refused call: red line in the feed, full story on the page."""
+        self.record(reason, raw=raw, cleaned=cleaned, best=best, score=score)
+        self.post("rejected", reason=reason, raw=raw, cleaned=cleaned, best=best,
+                  score=score, threshold=self.settings["fuzzy_threshold"])
+
+    def build_troubleshoot(self):
+        """Write troubleshoot.html from live state — the 🚑 button calls this."""
+        return troubleshoot_mod.build(self)
 
     def start_services(self):
         try:
@@ -157,6 +177,8 @@ class App:
             log.info("PTT up — %.2f s of audio", held)
             if held < self.settings["min_record_seconds"] or audio.size == 0:
                 log.info("too short — ignored")
+                if not self.practice_mode.is_set():
+                    self.reject("too_short")
                 self.post("state", state="ready")
                 return
             self.post("state", state="thinking")
@@ -177,6 +199,7 @@ class App:
             raw = self.engine.transcribe(wav)
         except Exception as e:  # engine hiccup must not kill the app mid-flight
             log.error("transcription failed: %s", e)
+            self.record("engine_error", raw=str(e))
             self.post("error", message=f"transcription failed: {e}")
             self.post("state", state="ready")
             return
@@ -184,18 +207,21 @@ class App:
         log.info("heard: %r (%.0f ms)", raw, t_stt * 1000)
         self.post("heard", raw=raw, ms=t_stt * 1000)
 
-        text = self.normalizer.normalize(raw)
+        verdict = self.normalizer.judge(raw)
+        text = verdict.text
         if self.practice_mode.is_set():
             self.post("practice", raw=raw, text=text)
             self.post("state", state="ready")
             return
         if text is None:
-            self.post("dropped", reason="dropped — silence/noise, nothing sent")
+            self.reject(verdict.reason, raw=raw, cleaned=verdict.cleaned,
+                        best=verdict.best, score=verdict.score)
             self.post("state", state="ready")
             return
         if text.startswith("note "):
             bridge.send_to_kneeboard(text[5:])
             log.info("kneeboard note sent")
+            self.record("kneeboard", raw=raw, text=text)
             self.post("dropped", reason="kneeboard note sent")
             self.post("state", state="ready")
             return
@@ -204,8 +230,11 @@ class App:
         ):
             total = (time.monotonic() - t0) * 1000
             log.info("sent to VoiceAttack: %r (total %.0f ms)", text, total)
+            self.record("sent", raw=raw, text=text, cleaned=verdict.cleaned,
+                        best=verdict.best, score=verdict.score)
             self.post("sent", text=text, total_ms=total)
         else:
+            self.record("va_unreachable", raw=raw, text=text)
             self.post("error", message="VoiceAttack not reachable — is it running with the WASC plugin?")
         self.post("state", state="ready")
 
@@ -254,10 +283,11 @@ class App:
     def run_gui(self):
         from ui import CobbWindow
 
-        # First launch on a new machine: open the install walkthrough once.
+        # First launch on a new machine: open the setup guide once. It covers
+        # installing as step 1, so there is only ever one manual to follow.
         marker = os.path.join(config.ROOT, ".install-guide-shown")
         if not os.path.exists(marker):
-            guide = os.path.join(config.ROOT, "Install-Instruction.html")
+            guide = os.path.join(config.ROOT, "Setup-Instruction.html")
             if os.path.exists(guide):
                 import webbrowser
                 webbrowser.open(guide)
@@ -270,6 +300,7 @@ class App:
                                  on_unteach=self.normalizer.remove_mapping,
                                  on_suggest=self.normalizer.suggest,
                                  on_practice=self.set_practice,
+                                 on_troubleshoot=self.build_troubleshoot,
                                  practice_phrases=self.practice_phrases())
         threading.Thread(target=self.start_services, daemon=True).start()
         self.window.run()  # blocks until the window closes
