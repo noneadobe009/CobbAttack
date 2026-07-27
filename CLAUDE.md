@@ -38,7 +38,8 @@ normalize (numbers→digits, glossary, rapidfuzz ≥85 vs command list) → text
 
 ## Sibling project
 
-Parlez (`../Whisper/`) is the dictation app this borrows from (recorder pattern, glossary packs,
+Parlez (`../Parlez/`, formerly the `Whisper/` folder) is the dictation app this borrows from
+(recorder pattern, glossary packs,
 logging/paths conventions). **Don't graft this onto Parlez** — different engine (whisper.cpp vs
 faster-whisper), different output path (VoiceAttack socket vs clipboard paste). Copy patterns,
 not dependencies.
