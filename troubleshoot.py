@@ -425,15 +425,20 @@ phrase in that line went to VoiceAttack. Anything wrong after that is one of the
 <section id="log" style="--acc:#7a8794">
 <h2>📄 Log — last 250 lines</h2>
 <p class="tag">The whole file is <code>cobbattack.log</code> next to the app. If nothing
-above explains it, hit the button and paste straight into Discord — one click copies the
-whole thing (Discord turns a long paste into a file automatically).</p>
-<button id="copylog" class="copybtn">📋 Copy log for Discord</button>
+above explains it, hit the button — it copies the <b>file itself</b> to the clipboard,
+so pasting into Discord attaches the complete log no matter how big it is.</p>
+<button id="copylog" class="copybtn">📋 Copy log file for Discord</button>
 <pre id="logpre">{_log_tail()}</pre>
 <script>
 document.getElementById('copylog').addEventListener('click', function () {{
   var btn = this;
-  var text = '```\\n' + document.getElementById('logpre').textContent + '\\n```';
-  function done(ok) {{
+  // Ask the running app to put cobbattack.log on the clipboard as a real file
+  // (like Ctrl+C in Explorer). If CobbAttack is closed, copy the text instead.
+  fetch('http://127.0.0.1:{config.IMPORT_PORT}/copy-log', {{method: 'POST'}})
+    .then(function (r) {{ return r.json(); }})
+    .then(function (j) {{ if (j.ok) {{ done(true, true); }} else {{ textCopy(); }} }})
+    .catch(textCopy);
+  function done(ok, isFile) {{
     if (!ok) {{  // blocked? pre-select the log so one Ctrl+C finishes the job
       var r = document.createRange();
       r.selectNodeContents(document.getElementById('logpre'));
@@ -441,23 +446,27 @@ document.getElementById('copylog').addEventListener('click', function () {{
       sel.removeAllRanges();
       sel.addRange(r);
     }}
-    btn.textContent = ok ? '✅ Copied — now paste it in Discord'
+    btn.textContent = ok ? (isFile ? '✅ Log file copied — paste it in Discord'
+                                   : '✅ Copied (last 250 lines) — paste it in Discord')
                          : '⚠️ Blocked — the log is selected for you, just press Ctrl+C';
-    setTimeout(function () {{ btn.textContent = '📋 Copy log for Discord'; }}, 6000);
+    setTimeout(function () {{ btn.textContent = '📋 Copy log file for Discord'; }}, 6000);
   }}
-  if (navigator.clipboard && navigator.clipboard.writeText) {{
-    navigator.clipboard.writeText(text).then(function () {{ done(true); }},
-                                            function () {{ fallback(); }});
-  }} else {{ fallback(); }}
-  function fallback() {{
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    var ok = false;
-    try {{ ok = document.execCommand('copy'); }} catch (e) {{}}
-    document.body.removeChild(ta);
-    done(ok);
+  function textCopy() {{
+    var text = '```\\n' + document.getElementById('logpre').textContent + '\\n```';
+    if (navigator.clipboard && navigator.clipboard.writeText) {{
+      navigator.clipboard.writeText(text).then(function () {{ done(true, false); }},
+                                              function () {{ fallback(); }});
+    }} else {{ fallback(); }}
+    function fallback() {{
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try {{ ok = document.execCommand('copy'); }} catch (e) {{}}
+      document.body.removeChild(ta);
+      done(ok, false);
+    }}
   }}
 }});
 </script>

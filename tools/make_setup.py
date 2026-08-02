@@ -631,6 +631,12 @@ Click it.</td></tr>
 everything live and explains this session call by call. Everything is also logged in
 <code>cobbattack.log</code> — send us that file.</td></tr>
 </table>
+<p style="margin:1.1rem 0 .2rem">
+<a href="troubleshoot.html" style="display:inline-block;background:var(--field);
+color:var(--text);text-decoration:none;padding:.6rem 1.2rem;border-radius:999px;
+border:1px solid #8a3a2e;font-weight:600">🚑 Open the live troubleshoot page</a>
+&nbsp; CobbAttack rewrites that page every time you press its 🚑 button — if the
+link doesn't open, press 🚑 in the app once first.</p>
 </section>
 
 <footer>CobbAttack 🌽 · built for Cobb's AMD rig · guide version 2026-07-27</footer>

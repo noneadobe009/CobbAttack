@@ -22,6 +22,8 @@ FUZZY_TERMS_PATH = os.path.join(ROOT, "fuzzy_terms.txt")
 COMMANDS_PATH = os.path.join(ROOT, "commands.txt")
 CUSTOM_COMMANDS_PATH = os.path.join(ROOT, "custom_commands.txt")
 RECIPIENTS_PATH = os.path.join(ROOT, "recipients.txt")
+# Local helper server (flight guide .vap drop-box + troubleshoot copy-log).
+IMPORT_PORT = 65434
 
 _DEFAULTS = {
     # WhisperAttack wire protocol (drop-in) — keep defaults identical to theirs.

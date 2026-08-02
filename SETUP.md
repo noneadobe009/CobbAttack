@@ -191,7 +191,10 @@ Only these matter — everything not listed stays at its default.
 - **🚑 TROUBLESHOOT** (red button) — builds `troubleshoot.html` from live state and
   opens it: a green/red check of everything that must be true right now, plus every
   call this session with the exact reason anything was refused. Start here when
-  something's wrong.
+  something's wrong. Its **📋 Copy log file for Discord** button puts
+  `cobbattack.log` on the clipboard as a real file — paste into Discord and the whole
+  log attaches (if CobbAttack is closed, it copies the last 250 lines as text
+  instead).
 - **📖 FLIGHT VOICE GUIDE** — every phrase your profile knows, plus the `.vap` drop-box.
 - **🎯 VOICE TRAINER** — scored practice; nothing reaches VoiceAttack while it runs.
 
@@ -264,8 +267,9 @@ into the `models` folder and set `"model": "ggml-small.en.bin"` in
 
 ## Troubleshooting
 
-**Press 🚑 TROUBLESHOOT in the app first** — it checks all of this live against your
-own machine and explains every call you've made this session. The list below is the
+**Press 🚑 TROUBLESHOOT in the app first** (or open [troubleshoot.html](troubleshoot.html)
+next to the app — the 🚑 button rewrites it fresh each time) — it checks all of this
+live against your own machine and explains every call you've made this session. The list below is the
 short reference.
 
 - **"NOT A COMMAND" on a real command** → the phrase isn't in the list CobbAttack

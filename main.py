@@ -9,6 +9,7 @@ import argparse
 import json
 import logging
 import os
+import subprocess
 import sys
 import threading
 import time
@@ -27,11 +28,12 @@ import vaicom_patch
 
 log = logging.getLogger("cobb")
 
-IMPORT_PORT = 65434  # the flight guide's profile drop-box posts .vap files here
+IMPORT_PORT = config.IMPORT_PORT  # flight guide drop-box + troubleshoot copy-log
 
 
 class _VapImportHandler(BaseHTTPRequestHandler):
-    """Receives a .vap dropped onto the flight guide page (localhost only)."""
+    """Receives a .vap dropped onto the flight guide page, and puts the log
+    file on the Windows clipboard for the troubleshoot page (localhost only)."""
 
     app = None  # set to the running App before the server starts
 
@@ -39,13 +41,43 @@ class _VapImportHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Filename")
         self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
+        # Chrome's private-network preflight for file:// → 127.0.0.1 fetches
+        self.send_header("Access-Control-Allow-Private-Network", "true")
 
     def do_OPTIONS(self):
         self.send_response(204)
         self._cors()
         self.end_headers()
 
+    def _reply(self, payload):
+        body = json.dumps(payload).encode()
+        self.send_response(200)
+        self._cors()
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def do_POST(self):
+        if self.path == "/copy-log":
+            # Put cobbattack.log itself on the clipboard (a real file copy, like
+            # Ctrl+C in Explorer) so pasting into Discord attaches the whole
+            # file. Windows PowerShell 5.1 on purpose: pwsh 7 dropped -Path.
+            ok = False
+            try:
+                path = config.LOG_PATH.replace("'", "''")
+                r = subprocess.run(
+                    ["powershell", "-NoProfile", "-Command",
+                     f"Set-Clipboard -LiteralPath '{path}'"],
+                    capture_output=True, timeout=10,
+                    creationflags=subprocess.CREATE_NO_WINDOW)
+                ok = r.returncode == 0
+                log.info("troubleshoot page: log file %s",
+                         "copied to clipboard" if ok else "copy FAILED")
+            except Exception:
+                log.exception("copy-log failed")
+            self._reply({"ok": ok})
+            return
         count = -1
         if self.path == "/import-vap":
             try:
@@ -60,13 +92,7 @@ class _VapImportHandler(BaseHTTPRequestHandler):
                 count = self.app.reimport_profiles()
             except Exception:
                 log.exception("profile drop import failed")
-        body = json.dumps({"count": count}).encode()
-        self.send_response(200)
-        self._cors()
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
+        self._reply({"count": count})
 
     def log_message(self, *args):  # keep HTTP chatter out of the app log
         pass
