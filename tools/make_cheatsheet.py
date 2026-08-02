@@ -496,6 +496,16 @@ def main():
     else:
         hero_img = '<div style="font-size:2rem">🎙️✈️</div>'
 
+    # footer mascot: the corn-with-sunglasses icon instead of a plain emoji
+    icon48 = os.path.join(ROOT, "cob-hero-48.png")
+    if os.path.exists(icon48):
+        with open(icon48, "rb") as f:
+            i64 = base64.b64encode(f.read()).decode()
+        foot_icon = (f'<img src="data:image/png;base64,{i64}" alt="🌽" '
+                     f'style="height:1.4em;vertical-align:-0.35em">')
+    else:
+        foot_icon = "🌽"
+
     total = sum(len(b) for b in buckets.values())
     page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -593,7 +603,7 @@ def main():
 
 {sections_html}
 
-<footer>Generated from your VAICOM profile · CobbAttack 📖</footer>
+<footer>Generated from your VAICOM profile · CobbAttack {foot_icon}</footer>
 
 <script>
 // Clicking a section chip also expands that section's "show all" list.

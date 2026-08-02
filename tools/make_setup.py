@@ -639,7 +639,7 @@ border:1px solid #8a3a2e;font-weight:600">🚑 Open the live troubleshoot page</
 link doesn't open, press 🚑 in the app once first.</p>
 </section>
 
-<footer>CobbAttack 🌽 · built for Cobb's AMD rig · guide version 2026-07-27</footer>
+<footer>CobbAttack __FOOT_ICON__ · built for Cobb's AMD rig · guide version 2026-08-02</footer>
 
 <div id="lightbox"><img alt=""></div>
 <script>
@@ -654,7 +654,14 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.click(); 
 </body></html>
 """
 
+# footer mascot: the corn-with-sunglasses icon instead of a plain 🌽 emoji
+icon48 = os.path.join(ROOT, "cob-hero-48.png")
+FOOT_ICON = (f'<img src="{data_uri(icon48)}" alt="🌽" '
+             f'style="height:1.4em;vertical-align:-0.35em">'
+             if os.path.exists(icon48) else "🌽")
+
 page = (PAGE.replace("__HERO__", HERO)
+            .replace("__FOOT_ICON__", FOOT_ICON)
             .replace("__VA_SHOTS__", VA_SHOTS)
             .replace("__VAICOM_SHOTS__", VAICOM_SHOTS)
             .replace("__BUTTON_SHOTS__", BUTTON_SHOTS)

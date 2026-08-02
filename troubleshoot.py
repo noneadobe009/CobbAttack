@@ -12,6 +12,7 @@ Nothing here talks to the network except two localhost port probes; the page is 
 plain file written next to the exe, so it can be sent to us as-is.
 """
 
+import base64
 import html
 import os
 import socket
@@ -293,6 +294,18 @@ def _score(e):
     return ""
 
 
+def _foot_icon():
+    """The corn-with-sunglasses mascot as an inline image; 🌽 if the art is gone."""
+    path = os.path.join(config.ROOT, "cob-hero-48.png")
+    try:
+        with open(path, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode()
+        return (f'<img src="data:image/png;base64,{b64}" alt="🌽" '
+                f'style="height:1.4em;vertical-align:-0.35em">')
+    except OSError:
+        return "🌽"
+
+
 def _log_tail(lines=250):
     try:
         with open(config.LOG_PATH, "r", encoding="utf-8", errors="replace") as f:
@@ -472,7 +485,7 @@ document.getElementById('copylog').addEventListener('click', function () {{
 </script>
 </section>
 
-<footer>CobbAttack 🌽 · troubleshoot page</footer>
+<footer>CobbAttack {_foot_icon()} · troubleshoot page</footer>
 </body></html>"""
 
     with open(DST, "w", encoding="utf-8") as f:

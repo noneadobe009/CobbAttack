@@ -30,7 +30,8 @@ GREEN = "#5dd08c"
 AMBER = "#e8b33e"
 RED = "#e06c5b"
 BLUE = "#5aa7e0"
-GOLD = "#ffd97a"  # jokes — bright corn gold so people actually notice them
+JOKE = "#ff8c42"  # jokes — vivid orange so people actually notice them
+                  # (not red: red already means "refused" in the feed)
 
 STATE_STYLES = {
     "ready": ("● READY", GREEN),
@@ -191,12 +192,16 @@ class CobbWindow:
                                  if os.path.exists(xl_png) else self._hero_img_big)
             xl_frame = tk.Frame(self.root, bg=BG, cursor="hand2")
             tk.Label(xl_frame, image=self._hero_img_xl, bg=BG, bd=0).pack()
-            xl_caption = tk.Label(xl_frame, text="", bg=BG, fg=GOLD,
+            xl_caption = tk.Label(xl_frame, text="", bg=BG, fg=JOKE,
                                   wraplength=340, justify="center",
                                   font=("Segoe UI", 11, "italic"))
             xl_caption.pack(pady=(4, 8), padx=12)
 
             def _hero_open(_e):
+                if xl_frame.winfo_ismapped():
+                    # second click on the icon closes it instead of re-rolling
+                    xl_frame.place_forget()
+                    return
                 big_lbl.place_forget()
                 xl_caption.configure(text=f"“{jokes.pick()}”")
                 xl_frame.place(relx=0.5, rely=0.5, anchor="center")
@@ -230,7 +235,7 @@ class CobbWindow:
         self.state_label = tk.Label(header, text="● STARTING…", bg=BG, fg=AMBER,
                                     font=("Segoe UI", 11, "bold"))
         self.state_label.pack(side="right")
-        self.joke_label = tk.Label(self.root, text=f"“{jokes.pick()}”", bg=BG, fg=GOLD,
+        self.joke_label = tk.Label(self.root, text=f"“{jokes.pick()}”", bg=BG, fg=JOKE,
                                    anchor="w", justify="left", wraplength=580,
                                    font=("Segoe UI", 11, "italic"))
         self.joke_label.pack(fill="x", padx=16, pady=(0, 4))
