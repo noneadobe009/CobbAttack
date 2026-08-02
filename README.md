@@ -11,8 +11,8 @@ VoiceAttack typically in **50–85 ms** after you release the button.
 Named for Cobb, whose AMD card deserved better than silent CPU lag.
 
 > ### 🚀 New here? Two links:
-> **[⬇️ Download the latest release](https://github.com/sextonjerome-cmyk/Cobb/releases/latest)** — everything bundled, no Python needed
-> **[🛠️ Setup Instruction](https://sextonjerome-cmyk.github.io/Cobb/Setup-Instruction.html)** — the one manual: install is step 1, then a screenshot for every click
+> **[⬇️ Download the latest release](https://github.com/sextonjerome-cmyk/CobbAttack/releases/latest)** — everything bundled, no Python needed
+> **[🛠️ Setup Instruction](https://sextonjerome-cmyk.github.io/CobbAttack/Setup-Instruction.html)** — the one manual: install is step 1, then a screenshot for every click
 
 ## How it works (one breath)
 
@@ -60,7 +60,9 @@ same protocol, same plugin.
   whole flight.
 - Command lists: VAICOM keyword export (`tools/make_commands.py` →
   `commands.txt` + `recipients.txt`) and/or **your own VoiceAttack profile**
-  (drop your `.vap` export in the folder — parsed on every startup).
+  (drop your `.vap` export in the folder — parsed on every startup). Reads both
+  `.vap` formats: old XML **and current VoiceAttack's compressed binary**
+  (reverse-engineered — plugin references are matched by GUID).
 
 ### The window (ui.py — pure tkinter, nothing to install)
 - Status light, live activity feed: `heard` → `sent` with per-utterance
@@ -82,6 +84,9 @@ same protocol, same plugin.
 - 🛠️ **SETUP INSTRUCTION** → the manual; 📖 **VOICE COMMANDS** → command
   cheatsheet; 🚑 **TROUBLESHOOT** (red) → live diagnostics page. A rotating
   fighter-pilot joke on every launch.
+- **🔗 Link checkbox** — "Start & close VoiceAttack together with CobbAttack".
+  Ticked: one click (and one admin prompt) starts both, closing either closes
+  both. Unticked (default): fully independent — launch-script friendly.
 - **One-click start**: `Start with VoiceAttack.bat` launches VoiceAttack
   (elevated) and CobbAttack together, skipping whatever is already running.
   `Add to Start Menu.bat` makes both shortcuts.
@@ -109,6 +114,11 @@ launch; harmless if VAICOM isn't installed):
   and fix, a "VoiceAttack/VAICOM did the wrong thing" section for problems
   downstream of us, and the log tail. Port checks **bind** rather than connect —
   connecting to :65433 would hand VoiceAttack an empty command.
+  Its **📋 Copy log file for Discord** button puts `cobbattack.log` on the
+  clipboard as a real file — one paste attaches the whole log.
+- **vaicom-explainer.html** — the interactive VAICOM window: all ten config
+  tabs as hover maps, 102 switches explained in plain English with ✅ tags for
+  what this setup expects. Linked from Setup Instruction step 4.
 - `tools/make_cheatsheet.py` — flight-phase command cheatsheet
   (`commands-cheatsheet.html`) with hover tooltips and your custom commands.
 - `tools/fake_va.py` + `tools/send_ctl.py` — full test harness, no VoiceAttack
@@ -135,9 +145,12 @@ launch; harmless if VAICOM isn't installed):
 
 | Key | Default | What |
 |---|---|---|
-| `model` | `ggml-base.en-q5_0.bin` | any ggml model in `models/` |
+| `model` | `ggml-base.en.bin` | any ggml model in `models/` (`small.en` = more accurate, still fast on GPU) |
 | `input_device` | Windows default | mic name substring, e.g. `"hyperx"` |
-| `control_port` / `text_port` | 65432 / 65433 | WhisperAttack-compatible ports |
+| `control_port` / `voiceattack_port` | 65432 / 65433 | WhisperAttack-compatible ports |
+| `link_voiceattack` | `false` | 🔗 start & close VoiceAttack together with CobbAttack |
+| `fuzzy_threshold` | 85 | firewall match strictness (lower = looser) |
+| `audio_ctx` | 768 | whisper encoder context — the short-command latency lever |
 | `dcs_install` | auto-detected | DCS path for the VAICOM patches |
 
 ## Credits
