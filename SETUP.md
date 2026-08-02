@@ -200,7 +200,7 @@ Only these matter — everything not listed stays at its default.
   `cobbattack.log` on the clipboard as a real file — paste into Discord and the whole
   log attaches (if CobbAttack is closed, it copies the last 250 lines as text
   instead).
-- **📖 FLIGHT VOICE GUIDE** — every phrase your profile knows, plus the `.vap` drop-box.
+- **📖 VOICE COMMANDS** — every phrase your profile knows, plus the `.vap` drop-box.
 - **🎯 VOICE TRAINER** — scored practice; nothing reaches VoiceAttack while it runs.
 
 **"✗ NOT A COMMAND — nothing sent"** (red line + a beep) means it heard you and

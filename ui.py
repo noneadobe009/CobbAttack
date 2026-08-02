@@ -253,7 +253,7 @@ class CobbWindow:
         self.trainer_btn = RoundButton(toolbar, "🎯  VOICE TRAINER", fg=GREEN,
                                        border="#3a6b4d", command=self._toggle_trainer)
         self.trainer_btn.pack(side="left", padx=(8, 0))
-        self.guide_btn = RoundButton(toolbar, "📖  FLIGHT VOICE GUIDE", fg=BLUE,
+        self.guide_btn = RoundButton(toolbar, "📖  VOICE COMMANDS", fg=BLUE,
                                      border="#3d5a7a", command=self._open_cheatsheet)
         self.guide_btn.pack(side="left", padx=(8, 0))
         self.trouble_btn = RoundButton(toolbar, "🚑  TROUBLESHOOT", fg=RED,

@@ -321,12 +321,6 @@ it — click it again.</div>
 <h2><span class="stepno">4</span>📻 VAICOM settings (Community 3.1.5.2, verified)</h2>
 <p class="tag">Open the VAICOM window (LCtrl+LAlt+C). Tick EXACTLY these; leave
 everything else unticked/default. Match the pictures.</p>
-<p style="margin:.2rem 0 .9rem">
-<a href="vaicom-explainer.html" style="display:inline-block;background:var(--field);
-color:var(--text);text-decoration:none;padding:.6rem 1.2rem;border-radius:999px;
-border:1px solid #6b5a2a;font-weight:600">📻 What does each VAICOM switch do?</a>
-&nbsp; Hover any checkbox, knob or button in that window and it explains itself —
-the list below says <b>which</b> to tick, that page says <b>why</b>.</p>
 <div class="ok">🆕 <b>Fresh VAICOM install?</b> Start VoiceAttack once (as admin) so
 VAICOM creates its files. If the profile "VAICOM PRO for DCS World" isn't in
 VoiceAttack's profile list, import it: profile dropdown → the little import icon →
@@ -371,6 +365,12 @@ without it VAICOM understands "request taxi to runway" and then silently throws 
 away — ATC never answers, and the only clue is a quiet orange log line.</div>
 <div class="danger">🚫 <b>RESET page:</b> touch nothing there. The yellow
 <b>MASTER ZERO</b> button wipes your whole VAICOM setup.</div>
+<p style="margin:1.1rem 0 .2rem">
+<a href="vaicom-explainer.html" style="display:inline-block;background:var(--field);
+color:var(--text);text-decoration:none;padding:.6rem 1.2rem;border-radius:999px;
+border:1px solid #6b5a2a;font-weight:600">📻 What does each VAICOM switch do?</a>
+&nbsp; Hover any checkbox, knob or button in that window and it explains itself —
+the list above says <b>which</b> to tick, that page says <b>why</b>.</p>
 </section>
 
 <section class="sec" id="buttons" style="--acc:#e8a04b">
@@ -468,7 +468,7 @@ clipboard copy failed (it often does) — the same list is saved at
 <code>C:\\Program Files (x86)\\VoiceAttack\\Apps\\VAICOMPRO\\Export\\keywords.txt</code>;
 copy its contents from there. Afterwards, redo steps 1–4 so CobbAttack learns the
 new list too.</div>
-<p style="color:var(--dim)">The 📖 flight guide rebuilds itself from the same list
+<p style="color:var(--dim)">The 📖 voice commands page rebuilds itself from the same list
 on the next restart — nothing extra to run.</p>
 <p><b>If a word keeps coming out wrong:</b> click the wrong word in a blue
 <code>heard:</code> line and pick a fix. If one word came out as two, <b>drag
@@ -523,7 +523,7 @@ learned instantly</span></div>
 })();
 </script>
 <p>What that does: your phrases are added to the firewall's allow-list (otherwise
-CobbAttack would discard them as mishears), and the flight guide's
+CobbAttack would discard them as mishears), and the voice commands page's
 "⚙️ Your custom commands" section updates automatically.</p>
 <div class="warn">⚠️ Re-export after every new command — CobbAttack can only read
 the <code>.vap</code> file, not VoiceAttack's memory. Forgot? Symptom: your new
@@ -580,7 +580,7 @@ export above.</div>
       everything live and explains every call you've made this session: what was
       heard, what was sent, and for anything refused, the exact reason and the fix.
       Start here whenever something is wrong; it also links the log we'd ask for.</li>
-  <li><b class="k">📖 FLIGHT VOICE GUIDE</b> — every phrase your profile knows, plus
+  <li><b class="k">📖 VOICE COMMANDS</b> — every phrase your profile knows, plus
       the drop-box for your own <code>.vap</code> export (step 8).</li>
   <li><b class="k">🎯 VOICE TRAINER</b> — scored practice. Nothing is sent to
       VoiceAttack while it's running.</li>

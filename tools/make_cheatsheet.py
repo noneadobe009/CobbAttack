@@ -509,7 +509,7 @@ def main():
     total = sum(len(b) for b in buckets.values())
     page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CobbAttack — Flight Voice Guide</title>
+<title>CobbAttack — Voice Commands</title>
 <style>
  :root {{ --bg:#14181d; --panel:#1c2229; --field:#242c35; --text:#d7dde3;
           --dim:#7a8794; --green:#5dd08c; --amber:#e8b33e; --blue:#5aa7e0; }}
@@ -572,7 +572,7 @@ def main():
 <div class="top">
 <div class="brand">
   {hero_img}
-  <h1>FLIGHT VOICE GUIDE</h1>
+  <h1>VOICE COMMANDS</h1>
   <p class="sub">{total} commands · your VAICOM profile · word-for-word</p>
 </div>
 <div class="cards">

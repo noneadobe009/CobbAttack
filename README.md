@@ -79,7 +79,7 @@ same protocol, same plugin.
   listening; left-click the icon to return, right-click for Show/Quit. The X
   button still quits, so the app can't be "lost". No tray library → minimize
   simply behaves the old way.
-- 🛠️ **SETUP INSTRUCTION** → the manual; 📖 **FLIGHT VOICE GUIDE** → command
+- 🛠️ **SETUP INSTRUCTION** → the manual; 📖 **VOICE COMMANDS** → command
   cheatsheet; 🚑 **TROUBLESHOOT** (red) → live diagnostics page. A rotating
   fighter-pilot joke on every launch.
 - **One-click start**: `Start with VoiceAttack.bat` launches VoiceAttack

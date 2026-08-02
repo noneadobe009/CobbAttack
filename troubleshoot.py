@@ -58,7 +58,7 @@ REASONS = {
         "(b) it was a command but a word came out wrong — click the wrong word in the "
         "blue heard: line and teach the fix; (c) it's YOUR own VoiceAttack command and "
         "CobbAttack has never seen your profile — export the profile and drop it on the "
-        "flight guide's drop-box.",
+        "voice commands page's drop-box.",
     ),
     "too_short": (
         "Button released too fast",
