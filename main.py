@@ -103,6 +103,11 @@ def setup_logging():
     root = logging.getLogger()
     root.setLevel(logging.INFO)
     if sys.stdout is not None:  # absent under pythonw — the log file still gets everything
+        try:  # the exe console is cp1252: a →, ≥ or 🔗 in a message must never
+            # crash the handler into a traceback — replace what can't be shown
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, OSError):
+            pass
         console = logging.StreamHandler(sys.stdout)
         console.setFormatter(fmt)
         root.addHandler(console)

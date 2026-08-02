@@ -140,7 +140,9 @@ def refresh():
             f.write(f"# generated from {os.path.basename(vap)} — do not edit; re-export instead\n")
             for p in sorted(phrases):
                 f.write(p + "\n")
-        log.info("custom commands: %d command(s) → %d phrase(s) from %s",
+        # "->" not "→": the frozen exe's console stream is cp1252 and a real
+        # arrow crashes the logging handler with a UnicodeEncodeError traceback
+        log.info("custom commands: %d command(s) -> %d phrase(s) from %s",
                  spoken_count, len(phrases), os.path.basename(vap))
         try:  # refresh the flight guide so the new commands appear in it too
             import make_cheatsheet
