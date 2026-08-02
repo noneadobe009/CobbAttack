@@ -353,6 +353,10 @@ CSS = """
  pre { background:#0e1216; border:1px solid #2a333e; border-radius:10px;
         padding:.9rem 1rem; overflow:auto; max-height:460px; font-size:.8rem;
         color:#9fb0c0; line-height:1.45; }
+ .copybtn { background:var(--field); color:var(--text); border:1px solid #3d5a7a;
+        border-radius:999px; padding:.55rem 1.1rem; font-size:.95rem; cursor:pointer;
+        font-family:inherit; margin:0 0 .8rem; }
+ .copybtn:hover { border-color:var(--blue); background:#2a3540; }
  footer { color:var(--dim); text-align:center; font-size:.85rem; margin-top:1.6rem; }
 """
 
@@ -421,8 +425,42 @@ phrase in that line went to VoiceAttack. Anything wrong after that is one of the
 <section id="log" style="--acc:#7a8794">
 <h2>📄 Log — last 250 lines</h2>
 <p class="tag">The whole file is <code>cobbattack.log</code> next to the app. If nothing
-above explains it, send us that file.</p>
-<pre>{_log_tail()}</pre>
+above explains it, hit the button and paste straight into Discord — one click copies the
+whole thing (Discord turns a long paste into a file automatically).</p>
+<button id="copylog" class="copybtn">📋 Copy log for Discord</button>
+<pre id="logpre">{_log_tail()}</pre>
+<script>
+document.getElementById('copylog').addEventListener('click', function () {{
+  var btn = this;
+  var text = '```\\n' + document.getElementById('logpre').textContent + '\\n```';
+  function done(ok) {{
+    if (!ok) {{  // blocked? pre-select the log so one Ctrl+C finishes the job
+      var r = document.createRange();
+      r.selectNodeContents(document.getElementById('logpre'));
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(r);
+    }}
+    btn.textContent = ok ? '✅ Copied — now paste it in Discord'
+                         : '⚠️ Blocked — the log is selected for you, just press Ctrl+C';
+    setTimeout(function () {{ btn.textContent = '📋 Copy log for Discord'; }}, 6000);
+  }}
+  if (navigator.clipboard && navigator.clipboard.writeText) {{
+    navigator.clipboard.writeText(text).then(function () {{ done(true); }},
+                                            function () {{ fallback(); }});
+  }} else {{ fallback(); }}
+  function fallback() {{
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try {{ ok = document.execCommand('copy'); }} catch (e) {{}}
+    document.body.removeChild(ta);
+    done(ok);
+  }}
+}});
+</script>
 </section>
 
 <footer>CobbAttack 🌽 · troubleshoot page</footer>

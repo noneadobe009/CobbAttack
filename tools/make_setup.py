@@ -414,7 +414,14 @@ fails silently: the button will move the radio but never record.</div>
       double-click <b class="k">CobbAttack.exe</b> — or use the one-click
       <b class="k">CobbAttack + VoiceAttack</b> shortcut, which starts VoiceAttack
       (admin prompt), waits for it, and then starts CobbAttack. Anything already
-      running is left alone.</li>
+      running is left alone.
+      <br>🔗 The checkbox at the bottom of the CobbAttack window —
+      <b class="k">"Start &amp; close VoiceAttack together with CobbAttack"</b> —
+      decides how the two apps live. <b>Ticked:</b> starting CobbAttack also starts
+      VoiceAttack (one admin prompt), and closing either one closes the other.
+      <b>Unticked (default):</b> fully independent — start and close each one
+      yourself, in any order. That's the right choice if you launch your apps from
+      your own script.</li>
   <li><b>Look at the first lines of the window:</b>
     <div class="device"><span class="good">✔ device: Vulkan GPU — AMD Radeon …</span> ← what you want<br>
     <span class="bad">✘ device: CPU — no GPU acceleration</span> ← tell us; update AMD

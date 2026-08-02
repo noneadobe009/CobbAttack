@@ -17,6 +17,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import config
 import custom_vap
+import valink
 import engine as engine_mod
 import normalize as normalize_mod
 import recorder as recorder_mod
@@ -164,6 +165,8 @@ class App:
             log.warning("profile drop-box server not started: %s", e)
         self.post("state", state="ready")
         log.info("ready — waiting for PTT (start/stop on port %d)", self.settings["control_port"])
+        if self.settings.get("link_voiceattack"):
+            valink.start(self)
 
     def on_control(self, message):
         if message == "start":
@@ -184,6 +187,13 @@ class App:
             self.post("state", state="thinking")
             threading.Thread(target=self.process, args=(audio,), daemon=True).start()
         elif message == "shutdown":
+            # The WASC plugin sends this when VoiceAttack exits. Only follow it
+            # down when the 🔗 link is on — otherwise the two stay independent.
+            if not self.settings.get("link_voiceattack"):
+                log.info("VoiceAttack closed — staying open (🔗 link is off)")
+                self.post("dropped",
+                          reason="VoiceAttack closed — CobbAttack stays open (🔗 link is off)")
+                return
             log.info("shutdown requested by plugin")
             self._shutdown.set()
             if self.window is not None:
@@ -252,6 +262,19 @@ class App:
                   message="couldn't teach that — both boxes need words, and they must differ")
         return False
 
+    def set_va_link(self, on: bool):
+        """🔗 checkbox: start/close VoiceAttack together with CobbAttack."""
+        self.settings["link_voiceattack"] = bool(on)
+        config.save_setting("link_voiceattack", bool(on))
+        if on:
+            log.info("🔗 link ON — VoiceAttack opens and closes with CobbAttack")
+            valink.start(self)  # no-op if the janitor is already armed
+        else:
+            # the janitor re-reads settings.json before closing, so saving the
+            # setting is all it takes to disarm the close half too
+            log.info("🔗 link OFF — VoiceAttack and CobbAttack are independent")
+            self.post("dropped", reason="link off — VoiceAttack is on its own now")
+
     def reimport_profiles(self):
         """Re-parse .vap exports, reload command lists, rebuild the flight guide."""
         custom_vap.refresh()
@@ -301,7 +324,9 @@ class App:
                                  on_suggest=self.normalizer.suggest,
                                  on_practice=self.set_practice,
                                  on_troubleshoot=self.build_troubleshoot,
-                                 practice_phrases=self.practice_phrases())
+                                 practice_phrases=self.practice_phrases(),
+                                 on_valink=self.set_va_link,
+                                 valink_on=self.settings.get("link_voiceattack", False))
         threading.Thread(target=self.start_services, daemon=True).start()
         self.window.run()  # blocks until the window closes
 

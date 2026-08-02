@@ -26,7 +26,7 @@ DST = os.path.join(DIST, "CobbAttack.zip")
 TOP_FILES = [
     "main.py", "ui.py", "config.py", "engine.py", "bridge.py", "recorder.py",
     "normalize.py", "jokes.py", "vaicom_patch.py", "custom_vap.py",
-    "tray.py", "troubleshoot.py",
+    "valink.py", "tray.py", "troubleshoot.py",
     "requirements.txt", "run-cobbattack.bat", "Add to Start Menu.bat",
     "Start with VoiceAttack.bat", "cobbattack.ico",
     "cob-hero.png", "cob-hero-48.png", "cob-hero-72.png", "cob-hero-200.png",

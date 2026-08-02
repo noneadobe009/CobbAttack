@@ -165,6 +165,15 @@ Only these matter — everything not listed stays at its default.
    Or use the **CobbAttack + VoiceAttack** shortcut (`Start with VoiceAttack.bat`):
    it starts VoiceAttack elevated, waits for it to load, then starts CobbAttack —
    and skips anything that's already running, so no needless admin prompt.
+
+   **🔗 Linked or separate?** The checkbox at the bottom of the CobbAttack window —
+   **"Start & close VoiceAttack together with CobbAttack"** — decides how the two
+   apps live:
+   - **Ticked**: starting CobbAttack also starts VoiceAttack (one admin prompt),
+     and closing either one closes the other.
+   - **Unticked (default)**: they are fully independent. Start and close each one
+     yourself, in any order — the right choice if you launch your apps from your
+     own script or in a fixed order.
 3. **Look at the first lines of the window.** You want:
    `>>> DEVICE: Vulkan GPU — AMD Radeon ... <<<`
    If it says `CPU — no GPU acceleration`, tell us — that's the exact problem

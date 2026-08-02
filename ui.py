@@ -30,6 +30,7 @@ GREEN = "#5dd08c"
 AMBER = "#e8b33e"
 RED = "#e06c5b"
 BLUE = "#5aa7e0"
+GOLD = "#ffd97a"  # jokes — bright corn gold so people actually notice them
 
 STATE_STYLES = {
     "ready": ("● READY", GREEN),
@@ -103,13 +104,15 @@ class RoundBox(tk.Canvas):
 class CobbWindow:
     def __init__(self, on_teach, on_close, on_suggest=None,
                  on_practice=None, practice_phrases=None,
-                 on_unteach=None, on_troubleshoot=None):
+                 on_unteach=None, on_troubleshoot=None,
+                 on_valink=None, valink_on=False):
         self._on_teach_cb = on_teach
         self.on_close = on_close
         self.on_suggest = on_suggest or (lambda word: [])
         self.on_practice = on_practice or (lambda on: None)
         self.on_unteach = on_unteach
         self.on_troubleshoot = on_troubleshoot
+        self.on_valink = on_valink or (lambda on: None)
         self.practice_phrases = practice_phrases or []
         self.events = queue.Queue()
         self._popup = None
@@ -181,31 +184,44 @@ class CobbWindow:
             big_lbl.bind("<Leave>", lambda e: big_lbl.place_forget())
 
             # click (on either the icon or its hover pop-over) → full-size art,
-            # centered; click the big picture to dismiss
+            # dead center of the window, with a fresh joke as the caption;
+            # click the big picture to dismiss
             xl_png = os.path.join(here, "cob-hero-200.png")
             self._hero_img_xl = (tk.PhotoImage(file=xl_png)
                                  if os.path.exists(xl_png) else self._hero_img_big)
-            xl_lbl = tk.Label(self.root, image=self._hero_img_xl, bg=BG, bd=0,
-                              cursor="hand2")
+            xl_frame = tk.Frame(self.root, bg=BG, cursor="hand2")
+            tk.Label(xl_frame, image=self._hero_img_xl, bg=BG, bd=0).pack()
+            xl_caption = tk.Label(xl_frame, text="", bg=BG, fg=GOLD,
+                                  wraplength=340, justify="center",
+                                  font=("Segoe UI", 11, "italic"))
+            xl_caption.pack(pady=(4, 8), padx=12)
 
             def _hero_open(_e):
                 big_lbl.place_forget()
-                # in place: centered on the icon like the hover pop, clamped to
-                # the window's top-left so the art stays visible
-                x = (hero_lbl.winfo_rootx() - self.root.winfo_rootx()
-                     + (hero_lbl.winfo_width() - self._hero_img_xl.width()) // 2)
-                y = (hero_lbl.winfo_rooty() - self.root.winfo_rooty()
-                     + (hero_lbl.winfo_height() - self._hero_img_xl.height()) // 2)
-                xl_lbl.place(x=max(x, 0), y=max(y, 0))
-                xl_lbl.lift()
+                xl_caption.configure(text=f"“{jokes.pick()}”")
+                xl_frame.place(relx=0.5, rely=0.5, anchor="center")
+                xl_frame.lift()
 
             hero_lbl.configure(cursor="hand2")
             big_lbl.configure(cursor="hand2")
             hero_lbl.bind("<Button-1>", _hero_open)
             big_lbl.bind("<Button-1>", _hero_open)
-            # mouse wandering off the big art (or a click on it) dismisses it
-            xl_lbl.bind("<Leave>", lambda e: xl_lbl.place_forget())
-            xl_lbl.bind("<Button-1>", lambda e: xl_lbl.place_forget())
+
+            def _xl_dismiss_if_left(_e):
+                # <Leave> also fires when the pointer crosses onto the caption —
+                # only dismiss once it is truly outside the frame
+                px, py = xl_frame.winfo_pointerx(), xl_frame.winfo_pointery()
+                fx, fy = xl_frame.winfo_rootx(), xl_frame.winfo_rooty()
+                if not (fx <= px < fx + xl_frame.winfo_width()
+                        and fy <= py < fy + xl_frame.winfo_height()):
+                    xl_frame.place_forget()
+
+            # mouse wandering off the big art (or a click anywhere on it) dismisses it
+            xl_frame.bind("<Leave>", _xl_dismiss_if_left)
+            for child in xl_frame.winfo_children():
+                child.bind("<Leave>", _xl_dismiss_if_left)
+                child.bind("<Button-1>", lambda e: xl_frame.place_forget())
+            xl_frame.bind("<Button-1>", lambda e: xl_frame.place_forget())
         else:  # Cobb-proof fallback: the drawn mini-hero
             hero = tk.Canvas(header, width=48, height=30, bg=BG, highlightthickness=0)
             hero.pack(side="left", padx=(0, 8))
@@ -214,7 +230,7 @@ class CobbWindow:
         self.state_label = tk.Label(header, text="● STARTING…", bg=BG, fg=AMBER,
                                     font=("Segoe UI", 11, "bold"))
         self.state_label.pack(side="right")
-        self.joke_label = tk.Label(self.root, text=f"“{jokes.pick()}”", bg=BG, fg="#56c2b4",
+        self.joke_label = tk.Label(self.root, text=f"“{jokes.pick()}”", bg=BG, fg=GOLD,
                                    anchor="w", justify="left", wraplength=580,
                                    font=("Segoe UI", 11, "italic"))
         self.joke_label.pack(fill="x", padx=16, pady=(0, 4))
@@ -319,7 +335,7 @@ class CobbWindow:
 
         # --- Teach-a-word panel ---
         teach = tk.Frame(self.root, bg=PANEL)
-        teach.pack(fill="x", padx=16, pady=(0, 14))
+        teach.pack(fill="x", padx=16, pady=(0, 6))
         tk.Label(teach,
                  text="Teach it — click a wrong word in a blue line (or drag across two words to fix a phrase), or type here:",
                  bg=PANEL, fg=DIM, anchor="w", font=("Segoe UI", 9)).grid(
@@ -349,7 +365,22 @@ class CobbWindow:
         teach.grid_columnconfigure(3, weight=1)
         self.right_entry.bind("<Return>", lambda e: self._teach())
 
+        # --- 🔗 VoiceAttack link (off = the two apps live their own lives) ---
+        self.valink_var = tk.BooleanVar(value=bool(valink_on))
+        valink_row = tk.Frame(self.root, bg=BG)
+        valink_row.pack(fill="x", padx=16, pady=(0, 10))
+        tk.Checkbutton(
+            valink_row,
+            text="🔗 Start & close VoiceAttack together with CobbAttack",
+            variable=self.valink_var, command=self._valink_toggled,
+            bg=BG, fg=DIM, activebackground=BG, activeforeground=TEXT,
+            selectcolor=FIELD, highlightthickness=0, bd=0, anchor="w",
+            font=("Segoe UI", 9)).pack(side="left")
+
         self.root.after(100, self._drain)
+
+    def _valink_toggled(self):
+        self.on_valink(self.valink_var.get())
 
     @staticmethod
     def _draw_retro_title(parent):

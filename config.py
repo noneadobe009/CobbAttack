@@ -43,6 +43,9 @@ _DEFAULTS = {
     "input_device": None,  # None = system default; or device name substring
     "max_record_seconds": 15,
     "min_record_seconds": 0.3,
+    # 🔗 checkbox: start VoiceAttack with us and close it when we quit (valink.py).
+    # Off = fully independent, for people who launch everything from their own script.
+    "link_voiceattack": False,
 }
 
 
@@ -55,3 +58,17 @@ def load() -> dict:
         except (json.JSONDecodeError, OSError):
             pass  # bad settings file falls back to defaults; logged by main
     return settings
+
+
+def save_setting(key, value):
+    """Persist one key into settings.json without dumping every default."""
+    raw = {}
+    if os.path.exists(SETTINGS_PATH):
+        try:
+            with open(SETTINGS_PATH, "r", encoding="utf-8") as f:
+                raw = json.load(f)
+        except (json.JSONDecodeError, OSError):
+            pass
+    raw[key] = value
+    with open(SETTINGS_PATH, "w", encoding="utf-8") as f:
+        json.dump(raw, f, indent=2)

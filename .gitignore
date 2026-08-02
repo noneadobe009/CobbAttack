@@ -10,6 +10,7 @@ troubleshoot.html
 *.vap
 cobbattack.log
 parley.log
+va_link.ps1
 .install-guide-shown
 backup-before-reinstall/
 screenshots/
