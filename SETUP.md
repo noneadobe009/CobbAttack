@@ -81,6 +81,11 @@ Open the VAICOM window (say nothing — just click the VoiceAttack log line "VAI
 Config" or press LCtrl+LAlt+C). Tabs across the top. Tick EXACTLY these; leave
 everything else unticked/default.
 
+Wondering what any switch in that window actually *does*? Open
+[vaicom-explainer.html](vaicom-explainer.html) next to the app — hover any checkbox,
+knob or button and it explains itself. The list below says **which** to tick; that
+page says **why**.
+
 **Preferences (PREFS)**
 - ✅ VSPX Processing
 - ✅ **Extended Command Set** ← the big one; without it ATC ignores you (see above)

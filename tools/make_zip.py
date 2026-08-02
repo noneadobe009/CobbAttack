@@ -33,11 +33,13 @@ TOP_FILES = [
     "cob-hero-icon.png",
     "README.md",
     "SETUP.md", "Setup-Instruction.html", "commands-cheatsheet.html",
+    "vaicom-explainer.html",
     "VAICOM-mission-restart-bug.md",
     "fuzzy_terms.txt", "commands.txt", "recipients.txt", "vaicom_keywords.txt",
 ]
 TOOL_FILES = [
     "make_commands.py", "make_cheatsheet.py", "make_setup.py", "make_zip.py",
+    "make_vaicom_explainer.py",
     "selftest.py", "fake_va.py", "send_ctl.py", "word_mappings.seed.txt",
 ]
 TREES = ["bin", "models", "third_party"]

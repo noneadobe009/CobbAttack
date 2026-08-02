@@ -321,6 +321,12 @@ it — click it again.</div>
 <h2><span class="stepno">4</span>📻 VAICOM settings (Community 3.1.5.2, verified)</h2>
 <p class="tag">Open the VAICOM window (LCtrl+LAlt+C). Tick EXACTLY these; leave
 everything else unticked/default. Match the pictures.</p>
+<p style="margin:.2rem 0 .9rem">
+<a href="vaicom-explainer.html" style="display:inline-block;background:var(--field);
+color:var(--text);text-decoration:none;padding:.6rem 1.2rem;border-radius:999px;
+border:1px solid #6b5a2a;font-weight:600">📻 What does each VAICOM switch do?</a>
+&nbsp; Hover any checkbox, knob or button in that window and it explains itself —
+the list below says <b>which</b> to tick, that page says <b>why</b>.</p>
 <div class="ok">🆕 <b>Fresh VAICOM install?</b> Start VoiceAttack once (as admin) so
 VAICOM creates its files. If the profile "VAICOM PRO for DCS World" isn't in
 VoiceAttack's profile list, import it: profile dropdown → the little import icon →
