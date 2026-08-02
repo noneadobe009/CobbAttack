@@ -406,6 +406,9 @@ CSS = """
         cursor:help; }
  .spot:hover, .spot.active { border-color:#ffd84d;
         background:rgba(255,216,77,.16); }
+ .jump { position:absolute; border:2px solid transparent; border-radius:6px;
+        cursor:pointer; }
+ .jump:hover { border-color:var(--blue); background:rgba(90,167,224,.18); }
  .explain { background:var(--panel); border:1px solid #2a333e; border-radius:12px;
         max-width:840px; margin:.8rem auto 0; padding:.9rem 1.1rem; min-height:7.5rem; }
  .explain h3 { margin:0 0 .35rem; font-size:1rem; color:#ffd84d; }
@@ -419,6 +422,17 @@ CSS = """
 """
 
 
+# The window's own tab strip is in the same place in every screenshot — make it
+# clickable there too, not only via the button row above. (x%, w%, target key.)
+TAB_STRIP_Y, TAB_STRIP_H = 11.0, 7.5
+TAB_STRIP = [
+    (1.0, 5.8, "ptt"), (6.8, 13.6, "prefs"), (20.4, 5.5, "mp"),
+    (25.9, 4.4, "ex"), (30.3, 11.0, "okb"), (41.3, 10.0, "config"),
+    (51.3, 9.2, "audio"), (60.5, 8.4, "editor"), (68.9, 6.4, "help"),
+    (83.6, 8.0, "reset"),
+]
+
+
 def main():
     tab_buttons, panels = [], []
     for key, title, shot, intro, spots in TABS:
@@ -427,6 +441,11 @@ def main():
             f'<div class="spot" style="left:{x}%;top:{y}%;width:{w}%;height:{h}%" '
             f'data-tab="{key}" data-i="{i}"></div>'
             for i, (x, y, w, h, _label, _text) in enumerate(spots))
+        spot_html += "".join(
+            f'<div class="jump" title="Open the {go.upper()} page" '
+            f'style="left:{x}%;top:{TAB_STRIP_Y}%;width:{w}%;height:{TAB_STRIP_H}%" '
+            f'data-go="{go}"></div>'
+            for x, w, go in TAB_STRIP if go != key)
         panels.append(
             f'<div class="panel" id="p-{key}">'
             f'<div class="intro">{intro}</div>'
@@ -485,6 +504,9 @@ document.querySelectorAll('.spot').forEach(s => {{
   s.addEventListener('mouseenter', reveal);
   s.addEventListener('click', reveal);
 }});
+// the tab strip inside the screenshots switches pages too
+document.querySelectorAll('.jump').forEach(j =>
+  j.addEventListener('click', () => show(j.dataset.go)));
 </script>
 </body></html>"""
 
