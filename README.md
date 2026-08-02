@@ -11,8 +11,8 @@ VoiceAttack typically in **50–85 ms** after you release the button.
 Named for Cobb, whose AMD card deserved better than silent CPU lag.
 
 > ### 🚀 New here? Two links:
-> **[⬇️ Download the latest release](https://github.com/sextonjerome-cmyk/CobbAttack/releases/latest)** — everything bundled, no Python needed
-> **[🛠️ Setup Instruction](https://sextonjerome-cmyk.github.io/CobbAttack/Setup-Instruction.html)** — the one manual: install is step 1, then a screenshot for every click
+> **[⬇️ Download the latest release](https://github.com/noneadobe009/CobbAttack/releases/latest)** — everything bundled, no Python needed
+> **[🛠️ Setup Instruction](https://noneadobe009.github.io/CobbAttack/Setup-Instruction.html)** — the one manual: install is step 1, then a screenshot for every click
 
 ## How it works (one breath)
 
