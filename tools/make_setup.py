@@ -235,9 +235,33 @@ verified working setup — <b>click any picture to zoom</b>. If your screen matc
 the pictures, you're done with that step.</p>
 
 <section class="sec" id="install" style="--acc:#5dd08c">
-<h2><span class="stepno">1</span>🧰 Where every file goes</h2>
-<p class="tag">The whole map: one folder for CobbAttack, and one small folder copied
-into VoiceAttack. Nothing is downloaded at runtime, nothing goes online.</p>
+<h2><span class="stepno">1</span>🧰 Installing</h2>
+<p class="tag">Run the installer and it does the whole map for you. Nothing is
+downloaded at runtime, nothing goes online.</p>
+<div class="warn">⚠️ <b>Install VoiceAttack first.</b> The installer looks for it so it
+can put a required plugin inside it. If VoiceAttack isn't there yet, that step is
+skipped and you'd have to do it by hand.</div>
+<ol>
+  <li>Run <b class="k">CobbAttackSetup-&lt;version&gt;.exe</b> and click through it.</li>
+  <li>It installs to <code>C:\\CobbAttack</code>. Anywhere is fine
+      <b>except Program Files</b> — the app saves your settings and your taught words
+      next to itself, and Windows makes Program Files read-only. The installer
+      refuses that folder rather than letting it break an hour later.</li>
+  <li>It copies <code>WhisperAttackServerCommand</code> into VoiceAttack's
+      <code>Apps</code> folder — <b>the step people most often get wrong</b>. Can't
+      find VoiceAttack? It asks you to point at the folder, and says so plainly if it
+      ended up skipping.</li>
+  <li>It creates both Start Menu shortcuts — <b class="k">CobbAttack</b>, and
+      <b class="k">CobbAttack + VoiceAttack</b> which starts both together.</li>
+</ol>
+<div class="ok">✔ <b>Upgrading?</b> Just run the new installer over the top. Your
+<code>word_mappings.txt</code> (every word you've taught it) and
+<code>vaicom_keywords.txt</code> (your VAICOM export) are kept exactly as they are —
+uninstalling leaves them behind too.</div>
+
+<h3 style="margin-top:22px">Or install by hand from the zip</h3>
+<p class="tag">The <code>.zip</code> is still published if you'd rather not run an
+installer. Two locations, that's the whole map:</p>
 <table class="fix">
 <tr><th>What</th><th>Where it goes</th></tr>
 <tr><td style="color:var(--text)">The unzipped <b class="k">CobbAttack folder</b>
@@ -260,6 +284,12 @@ Files</b>, which blocks the app from saving your word fixes</td></tr>
       Menu shortcuts — <b class="k">CobbAttack</b>, and
       <b class="k">CobbAttack + VoiceAttack</b> which starts both together.</li>
 </ol>
+<div class="warn">⚠️ <b>Upgrading from the zip overwrites your own files.</b> Unlike the
+installer, extracting over an existing folder replaces
+<code>word_mappings.txt</code>, <code>vaicom_keywords.txt</code> and
+<code>commands.txt</code>. Back those three up first, or unzip somewhere new and copy
+them across. (<code>settings.json</code> and your exported <code>.vap</code> are not
+in the zip, so they're safe.)</div>
 <div class="ok">✔ Already in the box: the whisper.cpp engine (Vulkan + CPU builds),
 the <code>base.en</code> model, and the WASC plugin — inside <code>bin\\</code>,
 <code>models\\</code> and <code>third_party\\</code>. There is nothing else to

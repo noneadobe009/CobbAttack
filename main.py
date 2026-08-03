@@ -25,6 +25,7 @@ import recorder as recorder_mod
 import bridge
 import troubleshoot as troubleshoot_mod
 import vaicom_patch
+import version
 
 log = logging.getLogger("cobb")
 
@@ -402,6 +403,9 @@ def main():
     args = parser.parse_args()
 
     setup_logging()
+    # First line in every log: which build this is. Support questions used to
+    # start with "which version are you on?" and no way to answer it.
+    log.info("CobbAttack v%s", version.__version__)
     settings = config.load()
     vaicom_patch.apply(settings)
     vaicom_patch.start_watch(settings)  # VA start wipes the fix — reapply on file change

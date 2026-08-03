@@ -12,9 +12,34 @@ VoiceAttack/VAICOM setup stays the same.
 rest. (There used to be a separate Install Instruction; it was folded in here so
 there's one place to look.)
 
-## Where every file goes
+## Installing
 
-Two locations, that's the whole map:
+**Install VoiceAttack first if you haven't** — the installer looks for it and puts a
+required plugin inside it. If VoiceAttack isn't there yet, that step gets skipped and
+you'd have to do it by hand.
+
+Then run **`CobbAttackSetup-<version>.exe`** and click through it. It:
+
+- installs to `C:\CobbAttack` (anywhere is fine **except Program Files** — the app saves
+  your settings and your taught words next to itself, and Windows makes Program Files
+  read-only. The installer refuses that folder rather than letting it break later),
+- copies the `WhisperAttackServerCommand` plugin into VoiceAttack's `Apps` folder for
+  you — the step people most often get wrong. Couldn't find VoiceAttack? It asks you to
+  point at the folder, and tells you plainly if it ended up skipping it,
+- makes the Start Menu shortcuts — **CobbAttack**, and **CobbAttack + VoiceAttack**
+  which starts both in one click.
+
+Nothing is downloaded, nothing goes online. The engine and both speech models are
+inside the installer.
+
+**Upgrading?** Just run the new installer over the top. It keeps `word_mappings.txt`
+(every word you've taught it) and `vaicom_keywords.txt` (your VAICOM export) exactly as
+they are. Uninstalling leaves those two behind as well.
+
+### Or install by hand from the zip
+
+`CobbAttack.zip` is still published if you'd rather not run an installer. Two locations,
+that's the whole map:
 
 | What | Where it goes |
 |---|---|
@@ -27,7 +52,15 @@ Two locations, that's the whole map:
 3. Optional: run `Add to Start Menu.bat` once. It makes two Start Menu shortcuts —
    **CobbAttack**, and **CobbAttack + VoiceAttack** which starts both in one click.
 
-Nothing is downloaded, nothing goes online.
+⚠️ **Upgrading from the zip overwrites your own files.** Unlike the installer, extracting
+over an existing folder replaces `word_mappings.txt`, `vaicom_keywords.txt` and
+`commands.txt`. Back those three up first, or unzip somewhere new and copy them across.
+(`settings.json` and your exported `.vap` are not in the zip, so they're safe.)
+
+## Which version am I running?
+
+The first line of the CobbAttack window — and of `cobbattack.log` — says
+`CobbAttack v1.3.0`. That's the quickest way to check before asking for help.
 
 ## What you need installed
 
@@ -35,10 +68,11 @@ Nothing is downloaded, nothing goes online.
 2. **VAICOM PRO Community Edition** (free): download the latest release from
    https://github.com/Penecruz/VAICOM-Community/releases (the `.msi`).
    Version 3.x is recommended — it has numeric keywords built in.
-3. **The WASC VoiceAttack plugin** — already in the box: copy the
+3. **The WASC VoiceAttack plugin** — **the installer already did this** if it found
+   VoiceAttack; you just need VoiceAttack → Options → Enable Plugin Support, then
+   restart VoiceAttack. Installing from the zip instead? Copy the
    `WhisperAttackServerCommand` folder from CobbAttack's `third_party\` into
-   `C:\Program Files (x86)\VoiceAttack\Apps\` (needs admin). Then VoiceAttack →
-   Options → Enable Plugin Support, and restart VoiceAttack.
+   `C:\Program Files (x86)\VoiceAttack\Apps\` (needs admin) first.
    (From the WhisperAttack project, MIT license — included. No need to install
    anything else of theirs; CobbAttack replaces their server program.)
 4. That's it — **no Python needed**: CobbAttack ships as `CobbAttack.exe`.

@@ -26,7 +26,7 @@ DST = os.path.join(DIST, "CobbAttack.zip")
 TOP_FILES = [
     "main.py", "ui.py", "config.py", "engine.py", "bridge.py", "recorder.py",
     "normalize.py", "jokes.py", "vaicom_patch.py", "custom_vap.py",
-    "valink.py", "tray.py", "troubleshoot.py",
+    "valink.py", "tray.py", "troubleshoot.py", "version.py",
     "requirements.txt", "run-cobbattack.bat", "Add to Start Menu.bat",
     "Start with VoiceAttack.bat", "cobbattack.ico",
     "cob-hero.png", "cob-hero-48.png", "cob-hero-72.png", "cob-hero-200.png",
@@ -39,7 +39,7 @@ TOP_FILES = [
 ]
 TOOL_FILES = [
     "make_commands.py", "make_cheatsheet.py", "make_setup.py", "make_zip.py",
-    "make_vaicom_explainer.py",
+    "make_vaicom_explainer.py", "make_installer.py",
     "selftest.py", "fake_va.py", "send_ctl.py", "word_mappings.seed.txt",
 ]
 TREES = ["bin", "models", "third_party"]
